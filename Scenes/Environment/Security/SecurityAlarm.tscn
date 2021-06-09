@@ -1,0 +1,30 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Assets/Sprites/Icons/iconmonstr-audio-21-240.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Sounds/Environment/Alarms/security_siren.wav" type="AudioStream" id=2]
+[ext_resource path="res://Scenes/Tools/Icon3D.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scripts/Environment/Security/SecurityAlarm.cs" type="Script" id=4]
+[ext_resource path="res://Assets/Sounds/Voice/SecuritySystem/warning_threat.wav" type="AudioStream" id=5]
+[ext_resource path="res://Assets/Sounds/Voice/SecuritySystem/security_alert_terminated.wav" type="AudioStream" id=6]
+
+[node name="SecurityAlarm" type="Spatial"]
+script = ExtResource( 4 )
+
+[node name="Icon3D" parent="." instance=ExtResource( 3 )]
+Size = 0.5
+Icon = ExtResource( 1 )
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 2 )
+unit_db = 5.0
+max_distance = 500.0
+
+[node name="AudioThreat" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 5 )
+unit_db = 25.0
+max_distance = 500.0
+
+[node name="AudioAlertTerminated" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 6 )
+unit_db = 25.0
+max_distance = 500.0

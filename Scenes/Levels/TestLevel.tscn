@@ -1,0 +1,49 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Assets/Materials/Prototype/prototype_box.tres" type="Material" id=1]
+[ext_resource path="res://Scenes/Player/Player.tscn" type="PackedScene" id=5]
+
+[sub_resource type="ProceduralSky" id=1]
+sky_top_color = Color( 0.313726, 0.313726, 0.313726, 1 )
+sky_horizon_color = Color( 0.145098, 0.145098, 0.145098, 1 )
+ground_bottom_color = Color( 0.145098, 0.145098, 0.145098, 1 )
+ground_horizon_color = Color( 0.145098, 0.145098, 0.145098, 1 )
+sun_color = Color( 0.235294, 0.235294, 0.235294, 1 )
+sun_longitude = -21.69
+
+[sub_resource type="Environment" id=2]
+background_mode = 2
+background_sky = SubResource( 1 )
+ambient_light_color = Color( 0.129412, 0.133333, 0.137255, 1 )
+ambient_light_sky_contribution = 0.0
+fog_color = Color( 0.313726, 0.313726, 0.313726, 1 )
+fog_sun_color = Color( 0.235294, 0.235294, 0.235294, 1 )
+ssao_enabled = true
+dof_blur_far_distance = 47.6
+dof_blur_far_transition = 85.3
+glow_enabled = true
+
+[node name="TestLevel" type="Spatial" groups=[
+"Level",
+]]
+
+[node name="Player" parent="." instance=ExtResource( 5 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6 )
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 2 )
+
+[node name="DirectionalLight" type="DirectionalLight" parent="WorldEnvironment"]
+transform = Transform( 0.965926, -5.3695e-07, -0.258819, 0.139733, -0.841737, 0.521492, -0.217858, -0.539888, -0.813055, 0, 7.94142, 0 )
+light_color = Color( 0.87451, 0.866667, 0.835294, 1 )
+shadow_enabled = true
+directional_shadow_max_distance = 200.0
+
+[node name="Spatial" type="Spatial" parent="."]
+
+[node name="CSGBox" type="CSGBox" parent="Spatial"]
+use_collision = true
+width = 50.0
+height = 0.01
+depth = 50.0
+material = ExtResource( 1 )

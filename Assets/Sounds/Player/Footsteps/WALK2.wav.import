@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/WALK2.wav-373c26baa44e8eac170751e03994818e.sample"
+
+[deps]
+
+source_file="res://Assets/Sounds/Player/Footsteps/WALK2.wav"
+dest_files=[ "res://.import/WALK2.wav-373c26baa44e8eac170751e03994818e.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

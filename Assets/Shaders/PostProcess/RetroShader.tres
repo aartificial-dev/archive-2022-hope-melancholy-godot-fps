@@ -1,0 +1,65 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+ 
+const float PI = 3.1415;
+const float TAU = 6.2831;
+
+uniform bool apply = true;
+uniform float chroma: hint_range(0., 2.) = 1.;
+// uniform float colour: hint_range(0., 6.2831) = 0.;
+uniform vec4 colour: hint_color = vec4(0.95, 0.98, 1., 1.);
+uniform float saturation: hint_range(0., 1.) = 0.8;
+uniform float brightness: hint_range(-1., 1.) = 0.03;
+uniform float contrast: hint_range(0., 4.) = 0.9;
+uniform float grain_amount: hint_range(0., 0.1) = 0.04;
+uniform float grain_speed: hint_range(0., 5.) = 5.;
+varying float time;
+
+void vertex(){
+	time = TIME;
+} 
+
+float grain (vec2 st){
+	return fract(sin(dot(st.xy, vec2(17.0,180.)))* 2500. + time * grain_speed);
+}
+
+vec3 filmic(sampler2D _tex, vec2 _uv) {
+	//Coords
+	vec2 uv = _uv;
+	uv.y = (uv.y - 1.0) * -1.0;
+	//Produce some noise based on the coords
+	vec3 grainPlate = vec3(grain(uv));
+	//Get the image
+	vec4 img = texture(_tex, _uv);
+	img.r = texture(_tex, _uv + vec2(chroma * 0.001, 0.)).r;
+	img.b = texture(_tex, _uv - vec2(chroma * 0.001, 0.)).b;	
+	//Mix the two signals together
+	vec3 mixer = mix(img.rgb, grainPlate, grain_amount);
+	mixer *= colour.rgb;
+	mixer = mix(vec3(dot(mixer.rgb, vec3(0.299, 0.587, 0.114))), mixer.rgb, saturation);
+	mixer = ((mixer - 0.5f) * max(contrast, 0)) + 0.5f;
+	mixer += vec3(brightness);
+	
+	return mixer; 
+}
+
+void fragment(){
+	if (apply) {
+		COLOR.rgb = filmic(TEXTURE, UV);
+	} else {
+		COLOR.rgb = texture(TEXTURE, UV).rgb;
+	}
+}"
+
+[resource]
+shader = SubResource( 1 )
+shader_param/apply = true
+shader_param/chroma = 0.5
+shader_param/colour = Color( 0.95, 0.98, 1, 1 )
+shader_param/saturation = 0.8
+shader_param/brightness = 0.0
+shader_param/contrast = 1.0
+shader_param/grain_amount = 0.022
+shader_param/grain_speed = 5.0

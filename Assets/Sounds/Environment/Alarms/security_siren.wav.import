@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/security_siren.wav-b93879a49344e9ea9873e07d514e984d.sample"
+
+[deps]
+
+source_file="res://Assets/Sounds/Environment/Alarms/security_siren.wav"
+dest_files=[ "res://.import/security_siren.wav-b93879a49344e9ea9873e07d514e984d.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=true
+compress/mode=0

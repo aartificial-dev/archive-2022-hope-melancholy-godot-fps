@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/pew.ogg-1ff13d8d2d747eda5441d41ab0b7907f.oggstr"
+
+[deps]
+
+source_file="res://Assets/Sounds/Weapons/PewShoot/pew.ogg"
+dest_files=[ "res://.import/pew.ogg-1ff13d8d2d747eda5441d41ab0b7907f.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

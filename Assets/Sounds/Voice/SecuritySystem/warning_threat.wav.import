@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/warning_threat.wav-0b2160576aebc866766ca5c38099c6d6.sample"
+
+[deps]
+
+source_file="res://Assets/Sounds/Voice/SecuritySystem/warning_threat.wav"
+dest_files=[ "res://.import/warning_threat.wav-0b2160576aebc866766ca5c38099c6d6.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

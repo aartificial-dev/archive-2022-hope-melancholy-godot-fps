@@ -1,0 +1,13 @@
+[gd_resource type="ShaderMaterial" load_steps=4 format=2]
+
+[ext_resource path="res://Assets/Textures/Prototype/Orange/texture_10.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Textures/Prototype/Dark/texture_09.png" type="Texture" id=2]
+[ext_resource path="res://Assets/Shaders/Prototype/shader_autotexture.shader" type="Shader" id=3]
+
+[resource]
+shader = ExtResource( 3 )
+shader_param/world_direction = Vector3( 0, 1, 0 )
+shader_param/max_angle = 0.795
+shader_param/scale = 2.0
+shader_param/top_texture = ExtResource( 2 )
+shader_param/side_texture = ExtResource( 1 )
