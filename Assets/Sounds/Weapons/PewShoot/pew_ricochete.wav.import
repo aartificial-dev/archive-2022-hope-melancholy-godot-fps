@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/pew_ricochete.wav-19f27e28f482365078e8f6fc64685591.sample"
+
+[deps]
+
+source_file="res://Assets/Sounds/Weapons/PewShoot/pew_ricochete.wav"
+dest_files=[ "res://.import/pew_ricochete.wav-19f27e28f482365078e8f6fc64685591.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

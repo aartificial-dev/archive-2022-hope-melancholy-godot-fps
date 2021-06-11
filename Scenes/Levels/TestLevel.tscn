@@ -1,6 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Assets/Materials/Prototype/prototype_box.tres" type="Material" id=1]
+[ext_resource path="res://Assets/Materials/Level/MetalBlue.tres" type="Material" id=2]
+[ext_resource path="res://Scenes/Environment/Security/SecurityCamera.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/Environment/Switches/SwitchButton.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Scenes/Player/Player.tscn" type="PackedScene" id=5]
 
 [sub_resource type="ProceduralSky" id=1]
@@ -23,6 +26,9 @@ dof_blur_far_distance = 47.6
 dof_blur_far_transition = 85.3
 glow_enabled = true
 
+[sub_resource type="BoxShape" id=3]
+extents = Vector3( 0.5, 0.5, 0.5 )
+
 [node name="TestLevel" type="Spatial" groups=[
 "Level",
 ]]
@@ -39,11 +45,142 @@ light_color = Color( 0.87451, 0.866667, 0.835294, 1 )
 shadow_enabled = true
 directional_shadow_max_distance = 200.0
 
-[node name="Spatial" type="Spatial" parent="."]
+[node name="Borders" type="Spatial" parent="."]
 
-[node name="CSGBox" type="CSGBox" parent="Spatial"]
+[node name="CSGBox" type="CSGBox" parent="Borders"]
 use_collision = true
 width = 50.0
 height = 0.01
 depth = 50.0
 material = ExtResource( 1 )
+
+[node name="CSGCombiner" type="CSGCombiner" parent="Borders"]
+use_collision = true
+
+[node name="CSGBox" type="CSGBox" parent="Borders/CSGCombiner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0 )
+width = 50.0
+height = 10.0
+depth = 50.0
+material = ExtResource( 1 )
+
+[node name="CSGBox2" type="CSGBox" parent="Borders/CSGCombiner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0 )
+operation = 2
+width = 48.0
+height = 10.0
+depth = 48.0
+material = ExtResource( 1 )
+
+[node name="Boxes" type="Spatial" parent="."]
+
+[node name="RigidBody" type="RigidBody" parent="Boxes"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.00599, -7.53483 )
+
+[node name="CSGBox" type="CSGBox" parent="Boxes/RigidBody"]
+width = 1.0
+height = 1.0
+depth = 1.0
+material = ExtResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Boxes/RigidBody"]
+shape = SubResource( 3 )
+
+[node name="RigidBody2" type="RigidBody" parent="Boxes"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.24938, 1.00599, -8.11526 )
+
+[node name="CSGBox" type="CSGBox" parent="Boxes/RigidBody2"]
+width = 1.0
+height = 1.0
+depth = 1.0
+material = ExtResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Boxes/RigidBody2"]
+shape = SubResource( 3 )
+
+[node name="RigidBody7" type="RigidBody" parent="Boxes"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.59798, 1.00599, -6.91441 )
+
+[node name="CSGBox" type="CSGBox" parent="Boxes/RigidBody7"]
+width = 1.0
+height = 1.0
+depth = 1.0
+material = ExtResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Boxes/RigidBody7"]
+shape = SubResource( 3 )
+
+[node name="RigidBody3" type="RigidBody" parent="Boxes"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0934736, 1.00599, -9.0636 )
+
+[node name="CSGBox" type="CSGBox" parent="Boxes/RigidBody3"]
+width = 1.0
+height = 1.0
+depth = 1.0
+material = ExtResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Boxes/RigidBody3"]
+shape = SubResource( 3 )
+
+[node name="RigidBody4" type="RigidBody" parent="Boxes"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.38794, 1.00599, -8.96073 )
+
+[node name="CSGBox" type="CSGBox" parent="Boxes/RigidBody4"]
+width = 1.0
+height = 1.0
+depth = 1.0
+material = ExtResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Boxes/RigidBody4"]
+shape = SubResource( 3 )
+
+[node name="RigidBody5" type="RigidBody" parent="Boxes"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.38794, 2.35272, -8.96073 )
+
+[node name="CSGBox" type="CSGBox" parent="Boxes/RigidBody5"]
+width = 1.0
+height = 1.0
+depth = 1.0
+material = ExtResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Boxes/RigidBody5"]
+shape = SubResource( 3 )
+
+[node name="RigidBody6" type="RigidBody" parent="Boxes"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.264778, 2.35272, -8.38265 )
+mass = 2.5
+
+[node name="CSGBox" type="CSGBox" parent="Boxes/RigidBody6"]
+width = 1.0
+height = 1.0
+depth = 1.0
+material = ExtResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Boxes/RigidBody6"]
+shape = SubResource( 3 )
+
+[node name="CSGBox2" type="CSGBox" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5943, 0.597651, 4 )
+use_collision = true
+width = 4.50985
+height = 4.0
+depth = 0.14603
+material = ExtResource( 1 )
+
+[node name="CSGBox3" type="CSGBox" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5943, 0.597651, -2.07604 )
+use_collision = true
+width = 4.50985
+height = 4.0
+depth = 0.14603
+material = ExtResource( 1 )
+
+[node name="SecurityCamera" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.92367, 0 )
+horStartAngle = 180.0
+verStartAngle = -35.0
+horAngleMin = 135.0
+horAngleMax = 225.0
+
+[node name="SwitchButton" parent="." instance=ExtResource( 4 )]
+transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0.968379, -1.9478 )

@@ -1,0 +1,332 @@
+[gd_scene load_steps=20 format=2]
+
+[ext_resource path="res://Scenes/UI/HUD/HUDLog.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Assets/Fonts/Consolas.tres" type="DynamicFont" id=2]
+[ext_resource path="res://Assets/Fonts/FontData/Digital Dismay.otf" type="DynamicFontData" id=3]
+[ext_resource path="res://Assets/Fonts/FontData/consolab.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://Assets/Fonts/FontData/DT104.ttf" type="DynamicFontData" id=5]
+[ext_resource path="res://Assets/Fonts/FontData/nicokaku_v1.ttf" type="DynamicFontData" id=6]
+[ext_resource path="res://Assets/Textures/UI/tex_ui_item_highlight.png" type="Texture" id=7]
+[ext_resource path="res://Scripts/UI/UICanvas.cs" type="Script" id=8]
+[ext_resource path="res://Scripts/UI/UIAlarmTimer.cs" type="Script" id=9]
+[ext_resource path="res://Scripts/UI/FPSLabel.cs" type="Script" id=10]
+[ext_resource path="res://Scripts/UI/InteractHighlight.cs" type="Script" id=12]
+
+[sub_resource type="StyleBoxLine" id=1]
+thickness = 4
+
+[sub_resource type="StyleBoxLine" id=2]
+thickness = 4
+vertical = true
+
+[sub_resource type="StyleBoxLine" id=3]
+color = Color( 1, 1, 1, 1 )
+thickness = 2
+
+[sub_resource type="StyleBoxLine" id=4]
+color = Color( 1, 1, 1, 1 )
+thickness = 2
+vertical = true
+
+[sub_resource type="DynamicFont" id=5]
+size = 100
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 80
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=7]
+size = 12
+font_data = ExtResource( 5 )
+
+[sub_resource type="DynamicFont" id=8]
+size = 80
+font_data = ExtResource( 6 )
+
+[node name="UI" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 8 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="HUDLog" parent="." instance=ExtResource( 1 )]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = -8.0
+margin_right = 8.0
+margin_bottom = -8.0
+
+[node name="InteractHighlight" type="Control" parent="."]
+visible = false
+script = ExtResource( 12 )
+
+[node name="NinePatchRect" type="NinePatchRect" parent="InteractHighlight"]
+margin_left = -16.0
+margin_top = -16.0
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 7 )
+patch_margin_left = 15
+patch_margin_top = 15
+patch_margin_right = 15
+patch_margin_bottom = 15
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="InteractHighlight/NinePatchRect"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_right = 40.0
+margin_bottom = 17.0
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 0.858824, 0.858824, 0.858824, 1 )
+custom_colors/font_color_shadow = Color( 0.192157, 0.172549, 0.184314, 1 )
+text = "Item"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Crosshair" type="Control" parent="."]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HSeparator2" type="HSeparator" parent="Crosshair"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -10.0
+margin_top = -2.0
+margin_right = 10.0
+margin_bottom = 2.0
+custom_styles/separator = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VSeparator2" type="VSeparator" parent="Crosshair"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -2.0
+margin_top = -10.0
+margin_right = 2.0
+margin_bottom = 10.0
+custom_styles/separator = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HSeparator" type="HSeparator" parent="Crosshair"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -10.0
+margin_top = -2.0
+margin_right = 10.0
+margin_bottom = 2.0
+custom_styles/separator = SubResource( 3 )
+
+[node name="VSeparator" type="VSeparator" parent="Crosshair"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -2.0
+margin_top = -10.0
+margin_right = 2.0
+margin_bottom = 10.0
+custom_styles/separator = SubResource( 4 )
+
+[node name="StatusBars" type="Control" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AlarmTimer" type="Control" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+script = ExtResource( 9 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Boxes" type="Control" parent="AlarmTimer"]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect5" type="ColorRect" parent="AlarmTimer/Boxes"]
+margin_left = -416.0
+margin_top = 16.0
+margin_right = -16.0
+margin_bottom = 312.0
+color = Color( 0.0705882, 0.0705882, 0.0705882, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="AlarmTimer/Boxes"]
+visible = false
+margin_left = -408.0
+margin_top = 24.0
+margin_right = -24.0
+margin_bottom = 304.0
+color = Color( 0.733333, 0.0117647, 0.0117647, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect2" type="ColorRect" parent="AlarmTimer/Boxes"]
+margin_left = -408.0
+margin_top = 32.0
+margin_right = -24.0
+margin_bottom = 112.0
+color = Color( 1, 0.235294, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect3" type="ColorRect" parent="AlarmTimer/Boxes"]
+margin_left = -392.0
+margin_top = 200.0
+margin_right = -40.0
+margin_bottom = 208.0
+color = Color( 1, 0.235294, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect4" type="ColorRect" parent="AlarmTimer/Boxes"]
+margin_left = -392.0
+margin_top = 288.0
+margin_right = -40.0
+margin_bottom = 296.0
+color = Color( 1, 0.235294, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Timer" type="Control" parent="AlarmTimer"]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="Label" parent="AlarmTimer/Timer"]
+margin_left = -328.0
+margin_top = 200.0
+margin_right = -104.0
+margin_bottom = 305.0
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 1, 0.290196, 0.0705882, 0.145098 )
+text = "88.88"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LabelTimer" type="Label" parent="AlarmTimer/Timer"]
+margin_left = -328.0
+margin_top = 200.0
+margin_right = -104.0
+margin_bottom = 305.0
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 1, 0.235294, 0, 1 )
+text = "99.99"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LabelAlert" type="Label" parent="AlarmTimer"]
+margin_left = -328.0
+margin_top = 32.0
+margin_right = -108.0
+margin_bottom = 113.0
+custom_fonts/font = SubResource( 6 )
+custom_colors/font_color = Color( 0.0705882, 0.0705882, 0.0705882, 1 )
+text = "ALERT"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LabelAlertBottom" type="Label" parent="AlarmTimer"]
+margin_left = -320.0
+margin_top = 96.0
+margin_right = -116.0
+margin_bottom = 113.0
+custom_fonts/font = SubResource( 7 )
+custom_colors/font_color = Color( 0.0705882, 0.0705882, 0.0705882, 1 )
+text = "security alarm in progress"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LabelKiken" type="Label" parent="AlarmTimer"]
+margin_left = -392.0
+margin_top = 112.0
+margin_right = -232.0
+margin_bottom = 201.0
+custom_fonts/font = SubResource( 8 )
+custom_colors/font_color = Color( 1, 0.235294, 0, 1 )
+text = "危険"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LabelKikenRight" type="Label" parent="AlarmTimer"]
+margin_left = -224.0
+margin_top = 112.0
+margin_right = -40.0
+margin_bottom = 200.0
+custom_fonts/font = SubResource( 7 )
+custom_colors/font_color = Color( 1, 0.235294, 0, 1 )
+text = "defence systems deployed, area lockdown in progress, high command notified"
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_right = 104.0
+margin_bottom = 25.0
+custom_fonts/font = ExtResource( 2 )
+text = "FPS: 666"
+script = ExtResource( 10 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Viewport" type="Viewport" parent="."]
+size = Vector2( 1280, 720 )
+transparent_bg = true
+render_target_v_flip = true
+gui_disable_input = true
+
+[node name="InventoryManager" type="Control" parent="Viewport"]
+margin_right = 40.0
+margin_bottom = 40.0

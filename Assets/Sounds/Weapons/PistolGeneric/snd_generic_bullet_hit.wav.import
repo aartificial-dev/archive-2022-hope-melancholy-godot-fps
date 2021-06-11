@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/snd_generic_bullet_hit.wav-9c9b21167cd06910a62b1f4e9650dcdb.sample"
+
+[deps]
+
+source_file="res://Assets/Sounds/Weapons/PistolGeneric/snd_generic_bullet_hit.wav"
+dest_files=[ "res://.import/snd_generic_bullet_hit.wav-9c9b21167cd06910a62b1f4e9650dcdb.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

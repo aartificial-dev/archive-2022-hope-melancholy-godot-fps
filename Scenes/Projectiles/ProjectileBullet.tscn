@@ -1,0 +1,38 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Assets/Materials/Projectiles/mat_bulletglow.tres" type="Material" id=1]
+[ext_resource path="res://Scripts/Projectiles/ProjectileBullet.cs" type="Script" id=2]
+
+[sub_resource type="CapsuleShape" id=1]
+radius = 0.0317344
+height = 0.139012
+
+[node name="ProjectileBullet" type="KinematicBody"]
+input_ray_pickable = false
+collision_layer = 0
+collision_mask = 17
+script = ExtResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 1 )
+
+[node name="Bullet" type="CSGPolygon" parent="."]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -0.1 )
+visible = false
+cast_shadow = 0
+polygon = PoolVector2Array( 0, 0, 0, 0.203, 0.018, 0.058 )
+mode = 1
+spin_degrees = 360.0
+spin_sides = 5
+smooth_faces = true
+material = ExtResource( 1 )
+
+[node name="Bullet2" type="CSGPolygon" parent="."]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -0.1 )
+cast_shadow = 0
+polygon = PoolVector2Array( 0, 0, 0, 2.097, 0.018, 0.058 )
+mode = 1
+spin_degrees = 360.0
+spin_sides = 5
+smooth_faces = true
+material = ExtResource( 1 )

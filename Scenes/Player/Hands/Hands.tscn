@@ -8,9 +8,6 @@
 [node name="Hands" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
-[node name="Pipe" parent="Hands/Skeleton" index="1"]
-visible = false
-
 [node name="AudioAttack" type="AudioStreamPlayer3D" parent="." index="2"]
 stream = ExtResource( 3 )
 attenuation_model = 3

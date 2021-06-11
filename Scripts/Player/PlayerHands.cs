@@ -10,6 +10,7 @@ public class PlayerHands : Spatial {
 
     private PackedScene vfx_concrete = ResourceLoader.Load<PackedScene>("res://Scenes/VFX/VFX_concrete_impact.tscn");
     private PackedScene prototypeBallScene = ResourceLoader.Load<PackedScene>("res://Scenes/Projectiles/PrototypeBall.tscn");
+    private PackedScene projBulletScene = ResourceLoader.Load<PackedScene>("res://Scenes/Projectiles/ProjectileBullet.tscn");
 
     public override void _Ready() {
         ChangeVisualLayer(this);
@@ -32,15 +33,18 @@ public class PlayerHands : Spatial {
             timer.Start(0.45f);
         }
 
-        // if (Input.IsActionJustPressed("key_aim")) {
-        //     PrototypeBall prototypeBall = prototypeBallScene.Instance<PrototypeBall>();
-        //     Spatial level = (Spatial) Helper.GetLevel();
-        //     PlayerCamera camera = Helper.GetCamera();
-        //     level.AddChild(prototypeBall);
-        //     prototypeBall.Translation = camera.GlobalTransform.origin;
-        //     prototypeBall.Rotation = camera.GlobalTransform.basis.GetEuler();
-        //     prototypeBall.ApplyCentralImpulse(-camera.GlobalTransform.basis.z * 20f);
-        // }
+        if (Input.IsActionJustPressed("key_aim")) {
+            ProjectileBullet projBullet = projBulletScene.Instance<ProjectileBullet>();
+            Spatial level = (Spatial) Helper.GetLevel();
+            PlayerCamera camera = Helper.GetCamera();
+            level.AddChild(projBullet);
+            projBullet.Translation = camera.GlobalTransform.origin;
+            projBullet.Rotation = camera.GlobalTransform.basis.GetEuler();
+            // projBullet.ApplyCentralImpulse(-camera.GlobalTransform.basis.z * 20f);
+            projBullet.relativeVector = -camera.GlobalTransform.basis.z;
+
+            GetNode<AudioStreamPlayer3D>("AudioPistolShoot").Play();
+        }
 	}
 
     private void ChangeVisualLayer(Node parent) {
