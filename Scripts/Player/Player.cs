@@ -2,6 +2,11 @@ using Godot;
 using System;
 
 public class Player : KinematicBody { 
+
+    private const float MAX_SLOPE_ANGLE = 0.785398f;
+    private const float CAMERA_Y_STANDING = 1.7f;
+    private const float CAMERA_Y_CROUCHING = 1.033f;
+
     private PlayerCamera camera;
     private PlayerStats playerStats = new PlayerStats();
     
@@ -13,15 +18,14 @@ public class Player : KinematicBody {
     private float rotationY = 0f;
     private float jumpForce = 4f;
 
-    private float headBobTimer = 0f;
+    private bool isClimbing = false;
 
-    private const float MAX_SLOPE_ANGLE = 0.785398f;
-    private const float CAMERA_Y_STANDING = 1.7f;
-    private const float CAMERA_Y_CROUCHING = 1.033f;
+    private float headBobTimer = 0f;
 
     private Vector3 prevPos;
 
     private RayCast floorRayCast;
+    private RayCast ceilingRayCast;
 
     private CollisionShape collisionStanding;
     private CollisionShape collisionCrouching;
@@ -34,9 +38,14 @@ public class Player : KinematicBody {
 
     private AnimationPlayer cameraAnimator;
 
+    private Area ladderArea;
+
     public override void _Ready() {
         camera = GetNode<PlayerCamera>("PlayerCamera");
         floorRayCast = GetNode<RayCast>("FloorRayCast");
+        ceilingRayCast = GetNode<RayCast>("CeilingRayCast");
+
+        ladderArea = GetNode<Area>("LadderArea");
 
         collisionStanding = GetNode<CollisionShape>("CollisionStanding");
         collisionCrouching = GetNode<CollisionShape>("CollisionCrouching");
@@ -71,6 +80,11 @@ public class Player : KinematicBody {
         if (Input.IsActionPressed("key_sprint")) isSprinting = true;
         if (Input.IsActionPressed("key_crouch")) isCrouching = true;
 
+        if (!floorRayCast.IsColliding()) isCrouching = false;
+        isCrouching = ceilingRayCast.IsColliding() ? true : isCrouching;
+        if (isCrouching) isSprinting = false;
+        if (isCrouching) isJumping = false;
+
         float crouchSpeed = 3.5f;
         if (isCrouching) {
             collisionStanding.Disabled = true;
@@ -80,6 +94,15 @@ public class Player : KinematicBody {
             collisionStanding.Disabled = false;
             collisionCrouching.Disabled = true;
             camera.Translation = camera.Translation.LinearInterpolate(new Vector3(0f, CAMERA_Y_STANDING, 0f), delta * crouchSpeed);
+        }
+
+        if (isCrouching) {
+            camera.UpdateFOV(camera.FOV - 2f);
+        } else
+        if (isSprinting && Mathf.Abs(velocity.x) > 1f && Mathf.Abs(velocity.z) > 1f ) {
+            camera.UpdateFOV(camera.FOV + 2f);
+        } else {
+            camera.UpdateFOV(camera.FOV);
         }
 
         CalculateVelocity(moveVec, isSprinting, isCrouching, isJumping, delta);
@@ -92,6 +115,7 @@ public class Player : KinematicBody {
         velocity = velocity.Rotated(Vector3.Up, rotationY);
 
         velocity = this.MoveAndSlide(velocity, Vector3.Up, true, 4, MAX_SLOPE_ANGLE, false);
+        // velocity = this.ExtendedMove(velocity, 4);
 
         velocity = velocity.Rotated(Vector3.Up, -rotationY);
 
@@ -109,7 +133,7 @@ public class Player : KinematicBody {
             Vector3 rot = camera.Rotation;
             rot.z = Mathf.Sin(headBobTimer) * bobStrength;
             camera.Rotation = rot;
-            ProcessStepSound();
+            ProcessStepSound(isSprinting, isCrouching);
         } else {
             headBobTimer = 0f;
             Vector3 rot = camera.Rotation;
@@ -121,6 +145,9 @@ public class Player : KinematicBody {
         }
 
         // TODO ladder climbing
+        // if (ladderArea) {
+        //     isClimbing = true;
+        // }
 
         // Helper.GetHUDLog().UpdateOutput(GD.Str("Speed: ", Mathf.FloorToInt((this.Translation * new Vector3(1f, 0f, 1f)).DistanceTo(prevPos * new Vector3(1f, 0f, 1f)) * 10000f)));
         prevPos = this.Translation;
@@ -145,7 +172,7 @@ public class Player : KinematicBody {
             velocity.y -= gravity * delta;
             velocity.y = Mathf.Clamp(velocity.y, -velocityMax.y, velocityMax.y);
         }
-        if (isJumping && floorRayCast.IsColliding() && !isCrouching) {
+        if (isJumping && (floorRayCast.IsColliding() || this.IsOnFloor()) && !isCrouching) {
             velocity.y = jumpForce;
             audioJump.Play();
             timerFootStep.Stop();
@@ -153,13 +180,13 @@ public class Player : KinematicBody {
         }
     }
     
-    private void ProcessStepSound() {
+    private void ProcessStepSound(bool isSprinting, bool isCrouching) {
         if (timerFootStep.TimeLeft == 0) {
             float baseTime = 0.65f;
-            if (Input.IsActionPressed("key_crouch")) {
+            if (isCrouching) {
                 timerFootStep.Start(baseTime * 1.8f);
             } else
-            if (Input.IsActionPressed("key_sprint")) {
+            if (isSprinting) {
                 timerFootStep.Start(baseTime * 0.7f);
             } else {
                 timerFootStep.Start(baseTime);

@@ -15,7 +15,10 @@ uniform float brightness: hint_range(-1., 1.) = 0.03;
 uniform float contrast: hint_range(0., 4.) = 0.9;
 uniform float grain_amount: hint_range(0., 0.1) = 0.04;
 uniform float grain_speed: hint_range(0., 5.) = 5.;
+uniform float crt_scale: hint_range(0.01, 10.) = 1.;
+uniform float crt_strength: hint_range(0., 1.) = 0.05;
 varying float time;
+
 
 void vertex(){
 	time = TIME;
@@ -47,7 +50,18 @@ vec3 filmic(sampler2D _tex, vec2 _uv) {
 
 void fragment(){
 	if (apply) {
-		COLOR.rgb = filmic(TEXTURE, UV);
+			
+		float ps = UV.x / (TEXTURE_PIXEL_SIZE.x * crt_scale);
+		vec3 color = filmic(TEXTURE, UV);
+		
+		int pp = int(mod(ps, 3.));
+		vec4 outcolor = vec4(0, 0, 0, 1);
+		if (pp == 1) outcolor.r = color.r;
+		    else if (pp == 2) outcolor.g = color.g;
+		        else outcolor.b = color.b;
+		// return outcolor;
+
+		COLOR.rgb = mix(color, outcolor.rgb, crt_strength);
 	} else {
 		COLOR.rgb = texture(TEXTURE, UV).rgb;
 	}
@@ -57,9 +71,11 @@ void fragment(){
 shader = SubResource( 1 )
 shader_param/apply = true
 shader_param/chroma = 0.5
-shader_param/colour = Color( 0.95, 0.98, 1, 1 )
+shader_param/colour = Color( 0.968627, 0.996078, 1, 1 )
 shader_param/saturation = 0.8
 shader_param/brightness = 0.0
 shader_param/contrast = 1.0
-shader_param/grain_amount = 0.022
+shader_param/grain_amount = 0.013
 shader_param/grain_speed = 5.0
+shader_param/crt_scale = 1.0
+shader_param/crt_strength = 0.05

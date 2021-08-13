@@ -1,15 +1,17 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Scenes/Levels/TestLevel.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Assets/Shaders/PostProcess/RetroShader.tres" type="Material" id=2]
+[ext_resource path="res://Utilities/MainViewport.cs" type="Script" id=2]
+[ext_resource path="res://Assets/Shaders/PostProcess/RetroShader.tres" type="Material" id=3]
 
 [node name="MainViewport" type="ViewportContainer"]
 pause_mode = 2
-material = ExtResource( 2 )
+material = ExtResource( 3 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 stretch = true
+script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -35,8 +37,7 @@ pause_mode = 1
 [node name="UI" type="Control" parent="UIHolder"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 2.51984
-margin_right = 2.51978
+margin_right = -0.00012207
 mouse_filter = 2
 __meta__ = {
 "_edit_use_anchors_": false

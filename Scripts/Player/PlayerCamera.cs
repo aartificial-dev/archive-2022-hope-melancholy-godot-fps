@@ -5,6 +5,12 @@ public class PlayerCamera : Spatial {
 
     [Export(PropertyHint.Range, "0,1")]
     private float sensitivity = 0.0025f;
+    [Export]
+    private float fov = 75;
+
+    public float FOV { get => fov; }
+
+    private float fovWanted;
 
     public bool mouseXInversed = false;
     public bool mouseYInversed = false;
@@ -14,7 +20,7 @@ public class PlayerCamera : Spatial {
     private Player player;
     private Camera camera;
 
-    private Vector3 handsRest = new Vector3(0f, 180f, 0f);
+    private Vector3 handsRest = new Vector3(0f, 0f, 0f);
     private Vector3 handsOffset = new Vector3(25f, 5f, 0f);
 
     private RayCast interactRay;
@@ -35,12 +41,15 @@ public class PlayerCamera : Spatial {
         interactRay = GetNode<RayCast>("InteractiveRayCast");
 
         hudInteract = GetNode<InteractHighlight>("../UI/InteractHighlight");
+
+        fovWanted = fov;
     }
 
 	public override void _Process(float delta) {
         weaponCamera.GlobalTransform = this.GlobalTransform;
 
         handsHolder.RotationDegrees = handsHolder.RotationDegrees.LinearInterpolate(handsRest, delta * 5f);
+        handsHolder.Rotation = new Vector3(handsHolder.Rotation.x, handsHolder.Rotation.y, -this.Rotation.z * 3f);
 
         if (interactRay.IsColliding() && Input.IsActionJustPressed("key_use")) {
             if (interactRay.GetCollider() is InteractiveBase interactive) {
@@ -51,7 +60,7 @@ public class PlayerCamera : Spatial {
             if (interactRay.GetCollider() is InteractiveBase interactive) {
                 if (this.interactive != interactive) {
                     this.interactive = interactive;
-                    Helper.GetHUDLog().Push( interactive.GetObjectName() ); 
+                    // Helper.GetHUDLog().Push( interactive.GetObjectName() ); 
                 }
                 Vector2 pos = camera.UnprojectPosition(this.interactive.GlobalTransform.origin);
                 Vector2 size = CalculateInteractiveObjectSize(interactive.GetPoints(), this.interactive.GlobalTransform.origin, pos, interactive.Rotation);
@@ -64,7 +73,13 @@ public class PlayerCamera : Spatial {
             interactive = null;
             hudInteract.Visible = false;
         }
+
+        camera.Fov = Mathf.Lerp(camera.Fov, fovWanted, delta * 1.5f);
 	}
+
+    public void UpdateFOV(float newFov) {
+        fovWanted = newFov;
+    }
 
     public override void _Input(InputEvent @event) {
         if (Input.GetMouseMode() != Input.MouseMode.Captured) return;

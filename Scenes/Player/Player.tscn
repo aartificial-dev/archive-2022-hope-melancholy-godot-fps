@@ -62,7 +62,7 @@ tracks/0/keys = {
 "Player",
 ]]
 collision_layer = 2
-collision_mask = 9
+collision_mask = 29
 script = ExtResource( 1 )
 
 [node name="CollisionStanding" type="CollisionShape" parent="."]
@@ -81,6 +81,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0 )
 script = ExtResource( 2 )
 
 [node name="InteractiveRayCast" type="RayCast" parent="PlayerCamera"]
+visible = false
 enabled = true
 cast_to = Vector3( 0, 0, -1.5 )
 collision_mask = 29
@@ -93,13 +94,13 @@ fov = 75.0
 far = 200.0
 
 [node name="HandsHolder" type="Spatial" parent="PlayerCamera/Camera"]
-transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, -0.2, -0.04 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0 )
 
 [node name="Hands" parent="PlayerCamera/Camera/HandsHolder" instance=ExtResource( 4 )]
 transform = Transform( 0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0 )
 
 [node name="CSGBox" type="CSGBox" parent="PlayerCamera/Camera/HandsHolder/Hands"]
-transform = Transform( 3.78284, 0.480634, -1.20795, -0.630046, 3.92875, -0.409843, 1.13719, 0.577858, 3.79116, -2.66454e-15, 0.403812, 1.816 )
+transform = Transform( 0.94571, 0.120159, -0.301987, -0.157512, 0.982188, -0.102461, 0.284297, 0.144464, 0.94779, 5.32907e-15, 0.100953, 0.454 )
 visible = false
 cast_shadow = 0
 width = 0.6
@@ -120,10 +121,13 @@ transform = Transform( 1, -3.72529e-09, -2.98023e-08, 0, 1, 0, 0, 1.49012e-08, 1
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, -0.2, 0 )
 
 [node name="AudioPistolShoot" type="AudioStreamPlayer3D" parent="PlayerCamera/Camera/HandsHolder/Hands"]
+transform = Transform( 1, 0, 1.06581e-14, 0, 1, 0, -1.06581e-14, 0, 1, 0, 0, 0 )
+visible = false
 stream = ExtResource( 20 )
 attenuation_model = 3
 
 [node name="MeleeRayCast" type="RayCast" parent="PlayerCamera/Camera"]
+visible = false
 cast_to = Vector3( 0, 0, -2 )
 collision_mask = 25
 
@@ -166,11 +170,13 @@ fov = 75.0
 
 [node name="FloorRayCast" type="RayCast" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0 )
+visible = false
 enabled = true
 cast_to = Vector3( 0, -0.2, 0 )
-collision_mask = 17
+collision_mask = 21
 
 [node name="Audio" type="Spatial" parent="."]
+visible = false
 
 [node name="AudioFootStep" type="AudioStreamPlayer3D" parent="Audio"]
 stream = ExtResource( 10 )
@@ -189,3 +195,20 @@ attenuation_model = 3
 
 [node name="TimerFootStep" type="Timer" parent="Audio"]
 one_shot = true
+
+[node name="CeilingRayCast" type="RayCast" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.33727, 0 )
+visible = false
+enabled = true
+cast_to = Vector3( 0, 0.667, 0 )
+collision_mask = 21
+
+[node name="LadderArea" type="Area" parent="."]
+visible = false
+monitorable = false
+collision_layer = 0
+collision_mask = 32
+
+[node name="CollisionStanding" type="CollisionShape" parent="LadderArea"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1, 0 )
+shape = SubResource( 1 )

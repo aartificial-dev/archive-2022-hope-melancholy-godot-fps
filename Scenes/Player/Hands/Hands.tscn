@@ -1,18 +1,372 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=22 format=2]
 
-[ext_resource path="res://Assets/Models/Hands/Hands.glb" type="PackedScene" id=1]
+[ext_resource path="res://Assets/Models/Hands/hands_rigged.dae" type="PackedScene" id=1]
 [ext_resource path="res://Scripts/Player/PlayerHands.cs" type="Script" id=2]
-[ext_resource path="res://Assets/Sounds/Weapons/Pipe/pipe_attack.wav" type="AudioStream" id=3]
-[ext_resource path="res://Assets/Sounds/Weapons/Pipe/pipe_hit_stone.wav" type="AudioStream" id=4]
+[ext_resource path="res://Scenes/Player/Weapons/Pistol.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/Player/Weapons/Pipe.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Assets/Sounds/Weapons/PistolGeneric/snd_generic_shoot.wav" type="AudioStream" id=5]
+[ext_resource path="res://Assets/Sounds/Weapons/PistolGeneric/snd_generic_reload.wav" type="AudioStream" id=6]
+[ext_resource path="res://Assets/Sounds/Weapons/PistolGeneric/snd_generic_empty.wav" type="AudioStream" id=7]
+[ext_resource path="res://Assets/Sounds/Weapons/Pipe/pipe_attack.wav" type="AudioStream" id=8]
+[ext_resource path="res://Assets/Sounds/Weapons/Pipe/pipe_hit_stone.wav" type="AudioStream" id=9]
+[ext_resource path="res://Assets/Sounds/Weapons/PistolGeneric/snd_generic_pistol_draw.wav" type="AudioStream" id=10]
+[ext_resource path="res://Assets/Sounds/Weapons/Pipe/pipe_draw.wav" type="AudioStream" id=11]
+[ext_resource path="res://Assets/Sounds/Weapons/PistolGeneric/snd_generic_pistol_aim.ogg" type="AudioStream" id=12]
+
+[sub_resource type="Animation" id=1]
+resource_name = "pipe_attack"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Pipe:translation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( 1.232, 0.092, -1.512 ), Vector3( 1.18755, 1.0216, -0.945897 ), Vector3( -0.506313, -0.561149, -2.05019 ), Vector3( 1.232, 0.092, -1.512 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Pipe:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( 3.35495, 162.36, 8.20769 ), Vector3( -30.0944, 157.09, 9.48105 ), Vector3( 42.127, 212.506, -5.458 ), Vector3( 3.35495, 162.36, 8.20769 ) ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "pipe_hold-loop"
+length = 0.1
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Pipe:translation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector3( 1.232, 0.092, -1.512 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Pipe:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector3( 3.35495, 162.36, 8.20769 ) ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "pipe_holster"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Pipe:translation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 1.232, 0.092, -1.512 ), Vector3( 1.232, -2.252, -1.512 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Pipe:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 3.35495, 162.36, 8.20769 ), Vector3( 3.355, 162.36, -90 ) ]
+}
+
+[sub_resource type="Animation" id=4]
+length = 0.3
+tracks/0/type = "value"
+tracks/0/path = NodePath("Pistol:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( 20.749, 180, 0 ), Vector3( 4.417, 172.313, -2.641 ), Vector3( 0, 180, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Pistol:translation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0.745, 0.097, -0.963 ), Vector3( -0.041, 0.287, -0.963 ), Vector3( 0.003, 0.287, -0.963 ) ]
+}
+
+[sub_resource type="Animation" id=5]
+length = 0.1
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Pistol:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector3( 0, 180, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Pistol:translation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector3( 0.003, 0.287, -0.963 ) ]
+}
+
+[sub_resource type="Animation" id=6]
+length = 0.1
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Pistol:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector3( 20.749, 180, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Pistol:translation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector3( 0.745, 0.097, -0.963 ) ]
+}
+
+[sub_resource type="Animation" id=7]
+resource_name = "pistol_holster"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Pistol:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 20.749, 180, 0 ), Vector3( 24.861, 225.093, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Pistol:translation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0.745, 0.097, -0.963 ), Vector3( 0.316, -0.689, -0.963 ) ]
+}
+
+[sub_resource type="Animation" id=8]
+length = 2.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("Pistol:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.5, 0.7, 0.9, 1.1, 1.2, 1.4, 1.5, 1.6, 1.8, 2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( 20.749, 180, 0 ), Vector3( -33.836, 180, 0 ), Vector3( -40.163, 180, -10.943 ), Vector3( -39.818, 180, -10.943 ), Vector3( -40.163, 180, -10.943 ), Vector3( 0.524, 180, -10.943 ), Vector3( 6.778, 180, -10.943 ), Vector3( 20.749, 180, 0 ), Vector3( 15.377, 180, 0 ), Vector3( -8.48, 180, 3.896 ), Vector3( 17.528, 180, 0 ), Vector3( 20.749, 180, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Pistol:translation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.2, 0.5, 0.7, 0.9, 1.1, 1.2, 1.4, 1.5, 1.8, 2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0.745, 0.097, -0.963 ), Vector3( 0.745, 0.231, -1.01 ), Vector3( 0.745, -0.169, -1.01 ), Vector3( 0.745, -0.115, -1.01 ), Vector3( 0.745, -0.169, -1.01 ), Vector3( 0.745, 0.007, -1.01 ), Vector3( 0.745, 0.118, -1.01 ), Vector3( 0.745, 0.097, -0.963 ), Vector3( 0.745, 0.097, -0.963 ), Vector3( 0.745, 0.097, -1.105 ), Vector3( 0.745, 0.097, -0.963 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Pistol:cockPos")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 1.5, 1.6, 1.8 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 0.0, 0.2, 0.0 ]
+}
+
+[sub_resource type="Animation" id=9]
+length = 0.25
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Pistol:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.05, 0.25 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 180, 0 ), Vector3( -13.321, 180, 6.577 ), Vector3( 0, 180, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Pistol:translation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.25 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0.003, 0.287, -0.963 ), Vector3( 0.003, 0.287, -0.963 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Pistol:cockPos")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.05, 0.25 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 0.2, 0.0 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Pistol:muzzleFlashVisible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.05, 0.15 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ false, true, false ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("Pistol:muzzleFlashRandomize")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
 
 [node name="Hands" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
-[node name="AudioAttack" type="AudioStreamPlayer3D" parent="." index="2"]
-stream = ExtResource( 3 )
-attenuation_model = 3
-max_distance = 100.0
+[node name="Hands" parent="." index="0"]
+visible = false
 
-[node name="AudioHit" type="AudioStreamPlayer3D" parent="." index="3"]
-stream = ExtResource( 4 )
+[node name="Camera" type="Camera" parent="." index="1"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="2"]
+anims/pipe_attack = SubResource( 1 )
+anims/pipe_hold-loop = SubResource( 2 )
+anims/pipe_holster = SubResource( 3 )
+anims/pistol_aim = SubResource( 4 )
+anims/pistol_aim-loop = SubResource( 5 )
+anims/pistol_hold-loop = SubResource( 6 )
+anims/pistol_holster = SubResource( 7 )
+anims/pistol_reload = SubResource( 8 )
+anims/pistol_shoot = SubResource( 9 )
+
+[node name="AudioPipeAttack" type="AudioStreamPlayer3D" parent="." index="3"]
+stream = ExtResource( 8 )
 attenuation_model = 3
+
+[node name="AudioPipeHit" type="AudioStreamPlayer3D" parent="." index="4"]
+stream = ExtResource( 9 )
+attenuation_model = 3
+
+[node name="AudioPistolShoot" type="AudioStreamPlayer3D" parent="." index="5"]
+stream = ExtResource( 5 )
+attenuation_model = 3
+
+[node name="AudioPistolReload" type="AudioStreamPlayer3D" parent="." index="6"]
+stream = ExtResource( 6 )
+attenuation_model = 3
+
+[node name="AudioPistolEmpty" type="AudioStreamPlayer3D" parent="." index="7"]
+stream = ExtResource( 7 )
+attenuation_model = 3
+
+[node name="AudioPipeDraw" type="AudioStreamPlayer3D" parent="." index="8"]
+stream = ExtResource( 11 )
+attenuation_model = 3
+
+[node name="AudioPistolAim" type="AudioStreamPlayer3D" parent="." index="9"]
+stream = ExtResource( 12 )
+attenuation_model = 3
+
+[node name="AudioPistolDraw" type="AudioStreamPlayer3D" parent="." index="10"]
+stream = ExtResource( 10 )
+attenuation_model = 3
+
+[node name="Pipe" parent="." index="11" instance=ExtResource( 4 )]
+transform = Transform( -0.940687, 0.153601, 0.302516, 0.142517, 0.98806, -0.0585216, -0.307893, -0.0119367, -0.951348, 1.232, 0.092, -1.512 )
+
+[node name="Pistol" parent="." index="12" instance=ExtResource( 3 )]
+transform = Transform( -0.705958, -0.297763, -0.64262, 0, 0.907331, -0.420419, 0.708254, -0.296798, -0.640538, 0.316, -0.689, -0.963 )
+visible = false

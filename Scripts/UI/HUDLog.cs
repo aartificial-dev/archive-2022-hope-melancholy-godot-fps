@@ -39,12 +39,17 @@ public class HUDLog : Control {
         Clear();
         // UpdateOutput(MakeLoadingBar(prog));
         // UpdateOutput("Debug info");
-        Push("Time is on our side");
-        Push("You will not escape");
-        Push("And therefore there's no end");
-        Push("A");
-        Push("A");
-        Push("A");
+        
+        // Push("Initialising system");
+        // Push(". . . . . . .");
+        // Push("System initialised");
+        // Push("Getting user position");
+        // Push("Position acquired");
+        // Push("Getting data sample");
+        // Push("Data sample acquired");
+        // Push("Initialising main system protocol");
+        // Push(". . . . . . .");
+        // Push("Main system protocol initialised");
     }
 
     private void UpdateBar() {
@@ -93,8 +98,8 @@ public class HUDLog : Control {
         if (wantedOutput.Length > 0) {
             String c = wantedOutput.Substr(0, 1);
             labelOutput.Text = GD.Str(labelOutput.Text, c);
-            // if (c != " ")
-            GetNode<AudioStreamPlayer>("AudioStreamPlayer").Play();
+            if (c != " ")
+                GetNode<AudioStreamPlayer>("AudioStreamPlayer").Play();
             
             if (wantedOutput.Length - 1 == 0) {
                 wantedOutput = "";

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/tool_draw.wav-61b5d86a1223e7f8f7f16e2542497142.sample"
+
+[deps]
+
+source_file="res://Assets/Sounds/Weapons/tool_draw.wav"
+dest_files=[ "res://.import/tool_draw.wav-61b5d86a1223e7f8f7f16e2542497142.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

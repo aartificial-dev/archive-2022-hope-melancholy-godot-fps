@@ -163,6 +163,7 @@ public class SecurityCamera : IAlarmSetter {
 
     private void LookForPlayer() {
         if (isBreaked) return;
+        if (player is null) return;
         if (this.GlobalTransform.origin.DistanceTo(player.GlobalTransform.origin) > 100f) return;
         Vector3 rayDirection = (player.GlobalTransform.origin + new Vector3(0f, 1f, 0f)) - this.GlobalTransform.origin;
         rayCast.CastTo = rayDirection;

@@ -55,9 +55,6 @@ margin_bottom = 25.0
 custom_fonts/font = ExtResource( 1 )
 text = "Initialising system"
 valign = 1
-__meta__ = {
-"_edit_lock_": true
-}
 
 [node name="Log6" type="Label" parent="VBoxContainer"]
 margin_top = 29.0
@@ -66,9 +63,6 @@ margin_bottom = 54.0
 custom_fonts/font = ExtResource( 1 )
 text = "[████████████████████] 100%"
 valign = 1
-__meta__ = {
-"_edit_lock_": true
-}
 
 [node name="Log5" type="Label" parent="VBoxContainer"]
 margin_top = 58.0
@@ -77,9 +71,6 @@ margin_bottom = 83.0
 custom_fonts/font = ExtResource( 1 )
 text = "System initialised"
 valign = 1
-__meta__ = {
-"_edit_lock_": true
-}
 
 [node name="Log4" type="Label" parent="VBoxContainer"]
 margin_top = 87.0
@@ -88,9 +79,6 @@ margin_bottom = 112.0
 custom_fonts/font = ExtResource( 1 )
 text = "Getting user position"
 valign = 1
-__meta__ = {
-"_edit_lock_": true
-}
 
 [node name="Log3" type="Label" parent="VBoxContainer"]
 margin_top = 116.0
@@ -99,9 +87,6 @@ margin_bottom = 141.0
 custom_fonts/font = ExtResource( 1 )
 text = "Position acquired"
 valign = 1
-__meta__ = {
-"_edit_lock_": true
-}
 
 [node name="Log2" type="Label" parent="VBoxContainer"]
 margin_top = 145.0
@@ -110,9 +95,6 @@ margin_bottom = 170.0
 custom_fonts/font = ExtResource( 1 )
 text = "Getting data sample"
 valign = 1
-__meta__ = {
-"_edit_lock_": true
-}
 
 [node name="Log1" type="Label" parent="VBoxContainer"]
 margin_top = 174.0
@@ -121,9 +103,6 @@ margin_bottom = 199.0
 custom_fonts/font = ExtResource( 1 )
 text = "Data sample acquired"
 valign = 1
-__meta__ = {
-"_edit_lock_": true
-}
 
 [node name="Log0" type="Label" parent="VBoxContainer"]
 margin_top = 203.0
@@ -132,9 +111,6 @@ margin_bottom = 228.0
 custom_fonts/font = ExtResource( 1 )
 text = "Initialising main system protocol"
 valign = 1
-__meta__ = {
-"_edit_lock_": true
-}
 
 [node name="Timer" type="Timer" parent="."]
 one_shot = true
