@@ -58,9 +58,7 @@ tracks/0/keys = {
 "values": [ Vector3( 0, 0, 0 ), Vector3( 1, 0, 0 ), Vector3( 0, 0, 0 ) ]
 }
 
-[node name="Player" type="KinematicBody" groups=[
-"Player",
-]]
+[node name="Player" type="KinematicBody" groups=["Player"]]
 collision_layer = 2
 collision_mask = 29
 script = ExtResource( 1 )
@@ -74,9 +72,7 @@ transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.67
 shape = SubResource( 2 )
 disabled = true
 
-[node name="PlayerCamera" type="Spatial" parent="." groups=[
-"PlayerCamera",
-]]
+[node name="PlayerCamera" type="Spatial" parent="." groups=["PlayerCamera"]]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0 )
 script = ExtResource( 2 )
 
@@ -90,7 +86,7 @@ collide_with_areas = true
 [node name="Camera" type="Camera" parent="PlayerCamera"]
 cull_mask = 524287
 current = true
-fov = 75.0
+fov = 85.0
 far = 200.0
 
 [node name="HandsHolder" type="Spatial" parent="PlayerCamera/Camera"]
@@ -205,9 +201,9 @@ collision_mask = 21
 
 [node name="LadderArea" type="Area" parent="."]
 visible = false
-monitorable = false
 collision_layer = 0
 collision_mask = 32
+monitorable = false
 
 [node name="CollisionStanding" type="CollisionShape" parent="LadderArea"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1, 0 )

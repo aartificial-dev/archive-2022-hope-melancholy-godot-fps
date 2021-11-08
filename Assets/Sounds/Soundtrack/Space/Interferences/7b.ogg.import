@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/7b.ogg-2c5782666501629eca59721a8dcc10d3.oggstr"
+
+[deps]
+
+source_file="res://Assets/Sounds/Soundtrack/Space/Interferences/7b.ogg"
+dest_files=[ "res://.import/7b.ogg-2c5782666501629eca59721a8dcc10d3.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

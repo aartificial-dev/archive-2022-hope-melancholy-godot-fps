@@ -185,11 +185,41 @@ public class Player : KinematicBody {
             float baseTime = 0.65f;
             if (isCrouching) {
                 timerFootStep.Start(baseTime * 1.8f);
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[0] = 1f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[1] = 1f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[2] = 1f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[3] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[4] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[5] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[6] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[7] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[8] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[9] = 0f;
             } else
             if (isSprinting) {
                 timerFootStep.Start(baseTime * 0.7f);
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[0] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[1] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[2] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[3] = 1f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[4] = 1f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[5] = 1f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[6] = 1f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[7] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[8] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[9] = 0f;
             } else {
                 timerFootStep.Start(baseTime);
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[0] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[1] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[2] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[3] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[4] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[5] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[6] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[7] = 1f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[8] = 1f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[9] = 1f;
             }
         }
     }

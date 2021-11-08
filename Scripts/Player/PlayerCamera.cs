@@ -6,7 +6,7 @@ public class PlayerCamera : Spatial {
     [Export(PropertyHint.Range, "0,1")]
     private float sensitivity = 0.0025f;
     [Export]
-    private float fov = 75;
+    private float fov = 85;
 
     public float FOV { get => fov; }
 

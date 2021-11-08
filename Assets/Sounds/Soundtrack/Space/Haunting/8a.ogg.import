@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/8a.ogg-020c41be27a48cc4c8385dee35a4779b.oggstr"
+
+[deps]
+
+source_file="res://Assets/Sounds/Soundtrack/Space/Haunting/8a.ogg"
+dest_files=[ "res://.import/8a.ogg-020c41be27a48cc4c8385dee35a4779b.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

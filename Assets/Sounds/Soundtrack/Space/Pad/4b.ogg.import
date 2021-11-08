@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/4b.ogg-648160f0ecfc6dc070ff5b4889bd5d5c.oggstr"
+
+[deps]
+
+source_file="res://Assets/Sounds/Soundtrack/Space/Pad/4b.ogg"
+dest_files=[ "res://.import/4b.ogg-648160f0ecfc6dc070ff5b4889bd5d5c.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0
