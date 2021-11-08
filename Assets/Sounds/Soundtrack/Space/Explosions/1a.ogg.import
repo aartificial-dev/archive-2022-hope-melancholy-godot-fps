@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/1a.ogg-ffe5c1ee76b05b7cefdf79587dd48337.oggstr"
+
+[deps]
+
+source_file="res://Assets/Sounds/Soundtrack/Space/Explosions/1a.ogg"
+dest_files=[ "res://.import/1a.ogg-ffe5c1ee76b05b7cefdf79587dd48337.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

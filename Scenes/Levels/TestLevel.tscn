@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Assets/Materials/Prototype/prototype_box.tres" type="Material" id=1]
 [ext_resource path="res://Assets/Fonts/Consolas.tres" type="DynamicFont" id=2]
@@ -6,6 +6,8 @@
 [ext_resource path="res://Scenes/Environment/ShootingTarget.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Scenes/Player/Player.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Scenes/Environment/Locomotion/LadderCollder.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Scenes/SFX/Soundtrack/AdaptiveSoundtrack.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Assets/Resources/AdaptiveSoundtrack/AdaptiveSpaceTrack.tres" type="Resource" id=8]
 
 [sub_resource type="ProceduralSky" id=1]
 sky_top_color = Color( 0.313726, 0.313726, 0.313726, 1 )
@@ -22,14 +24,17 @@ ambient_light_color = Color( 0.129412, 0.133333, 0.137255, 1 )
 ambient_light_sky_contribution = 0.0
 fog_color = Color( 0.313726, 0.313726, 0.313726, 1 )
 fog_sun_color = Color( 0.235294, 0.235294, 0.235294, 1 )
+tonemap_mode = 4
+tonemap_white = 1.5
 ssao_enabled = true
 dof_blur_far_distance = 47.6
 dof_blur_far_transition = 85.3
 glow_enabled = true
 
-[node name="TestLevel" type="Spatial" groups=[
-"Level",
-]]
+[node name="TestLevel" type="Spatial" groups=["Level"]]
+
+[node name="AdaptiveSoundtrack" parent="." instance=ExtResource( 7 )]
+adaptiveTrack = ExtResource( 8 )
 
 [node name="Player" parent="." instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6 )
@@ -181,13 +186,13 @@ depth = 0.206488
 
 [node name="LadderCollder" parent="Ladders" instance=ExtResource( 6 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.52886, 0 )
-Width = 0.5
 Height = 0.47
+Width = 0.5
 
 [node name="LadderCollder2" parent="Ladders" instance=ExtResource( 6 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4946, 0.72378, 0.0201807 )
-Width = 0.64
 Height = 1.28
+Width = 0.64
 
 [node name="Slopes" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 0, 21 )
@@ -252,66 +257,66 @@ height = 0.346265
 
 [node name="Label3D" parent="Slopes/Labels" instance=ExtResource( 3 )]
 transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 2, 0 )
-Font = ExtResource( 2 )
-editorOnly = false
 Text = "10'"
 TextScale = 2.5
+Font = ExtResource( 2 )
+editorOnly = false
 
 [node name="Label3D2" parent="Slopes/Labels" instance=ExtResource( 3 )]
 transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 2, -2 )
-Font = ExtResource( 2 )
-editorOnly = false
 Text = "20'"
 TextScale = 2.5
+Font = ExtResource( 2 )
+editorOnly = false
 
 [node name="Label3D3" parent="Slopes/Labels" instance=ExtResource( 3 )]
 transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 2, -4 )
-Font = ExtResource( 2 )
-editorOnly = false
 Text = "30'"
 TextScale = 2.5
+Font = ExtResource( 2 )
+editorOnly = false
 
 [node name="Label3D4" parent="Slopes/Labels" instance=ExtResource( 3 )]
 transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 2, -6 )
-Font = ExtResource( 2 )
-editorOnly = false
 Text = "40'"
 TextScale = 2.5
+Font = ExtResource( 2 )
+editorOnly = false
 
 [node name="Label3D5" parent="Slopes/Labels" instance=ExtResource( 3 )]
 transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 2, -8 )
-Font = ExtResource( 2 )
-editorOnly = false
 Text = "45'"
 TextScale = 2.5
+Font = ExtResource( 2 )
+editorOnly = false
 
 [node name="Label3D6" parent="Slopes/Labels" instance=ExtResource( 3 )]
 transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 2, -10 )
-Font = ExtResource( 2 )
-editorOnly = false
 Text = "50'"
 TextScale = 2.5
+Font = ExtResource( 2 )
+editorOnly = false
 
 [node name="Label3D7" parent="Slopes/Labels" instance=ExtResource( 3 )]
 transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 2, -12 )
-Font = ExtResource( 2 )
-editorOnly = false
 Text = "60'"
 TextScale = 2.5
+Font = ExtResource( 2 )
+editorOnly = false
 
 [node name="Label3D8" parent="Slopes/Labels" instance=ExtResource( 3 )]
 transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 2, -14 )
-Font = ExtResource( 2 )
-editorOnly = false
 Text = "70'"
 TextScale = 2.5
+Font = ExtResource( 2 )
+editorOnly = false
 
 [node name="Label3D9" parent="Slopes/Labels" instance=ExtResource( 3 )]
 transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 2, -16 )
-Font = ExtResource( 2 )
-editorOnly = false
 Text = "80'"
 TextScale = 2.5
+Font = ExtResource( 2 )
+editorOnly = false
 
 [node name="Steps" type="Spatial" parent="."]
 
