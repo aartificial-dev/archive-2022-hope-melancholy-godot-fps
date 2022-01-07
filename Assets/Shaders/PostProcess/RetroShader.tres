@@ -51,7 +51,7 @@ vec3 filmic(sampler2D _tex, vec2 _uv) {
 void fragment(){
 	if (apply) {
 			
-		float ps = UV.x / (TEXTURE_PIXEL_SIZE.x * crt_scale);
+		float ps = UV.y / (TEXTURE_PIXEL_SIZE.y * crt_scale) + TIME;
 		vec3 color = filmic(TEXTURE, UV);
 		
 		int pp = int(mod(ps, 3.));
@@ -71,11 +71,11 @@ void fragment(){
 shader = SubResource( 1 )
 shader_param/apply = true
 shader_param/chroma = 0.5
-shader_param/colour = Color( 0.968627, 0.996078, 1, 1 )
+shader_param/colour = Color( 0.968627, 0.980392, 1, 1 )
 shader_param/saturation = 0.8
 shader_param/brightness = 0.0
 shader_param/contrast = 1.0
-shader_param/grain_amount = 0.013
+shader_param/grain_amount = 0.012
 shader_param/grain_speed = 5.0
 shader_param/crt_scale = 1.0
-shader_param/crt_strength = 0.05
+shader_param/crt_strength = 0.015

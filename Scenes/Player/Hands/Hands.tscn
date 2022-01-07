@@ -1,7 +1,7 @@
 [gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Assets/Models/Hands/hands_rigged.dae" type="PackedScene" id=1]
-[ext_resource path="res://Scripts/Player/PlayerHands.cs" type="Script" id=2]
+[ext_resource path="res://Scripts/Player/OldPlayerHands.cs" type="Script" id=2]
 [ext_resource path="res://Scenes/Player/Weapons/Pistol.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scenes/Player/Weapons/Pipe.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Assets/Sounds/Weapons/PistolGeneric/snd_generic_shoot.wav" type="AudioStream" id=5]

@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class PlayerHands : Spatial { 
+public class OldPlayerHands : Spatial { 
 
     private AnimationPlayer animationPlayer;
     private Timer timer;

@@ -1,0 +1,31 @@
+[gd_resource type="ShaderMaterial" load_steps=4 format=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform sampler2D sampler;
+uniform float angle = 0f;
+
+vec2 rotateUV(vec2 uv, float rotation) {
+    float mid = 0.5;
+    return vec2(
+        cos(rotation) * (uv.x - mid) + sin(rotation) * (uv.y - mid) + mid,
+        cos(rotation) * (uv.y - mid) - sin(rotation) * (uv.x - mid) + mid
+    );
+}
+
+void fragment() {
+	COLOR = texture(sampler, rotateUV(UV, radians(angle)));
+}"
+
+[sub_resource type="Gradient" id=2]
+offsets = PoolRealArray( 0, 0.689441 )
+colors = PoolColorArray( 0, 0, 0, 0.341176, 0, 0, 0, 0 )
+
+[sub_resource type="GradientTexture" id=3]
+gradient = SubResource( 2 )
+
+[resource]
+shader = SubResource( 1 )
+shader_param/angle = 90.0
+shader_param/sampler = SubResource( 3 )

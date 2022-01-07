@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class PlayerStats {
+public class OldPlayerStats {
 
     private float health;
     private float sanity;
@@ -11,7 +11,7 @@ public class PlayerStats {
     private const float SANITY_MAX = 100f;
     private const float CHI_MAX = 100f;
 
-    public PlayerStats() {
+    public OldPlayerStats() {
         health = 100f;
         sanity = 100f;
         chi = 100f;
