@@ -26,7 +26,7 @@ public class BreakableGlass : CSGBox {
 
     public void Shatter(Vector3 pos, Vector3 velocity, Vector3 normal) {
         return;
-        
+        #pragma warning disable
         Transform tr = audioStreamPlayer3D.GlobalTransform;
         tr.origin = pos;
         audioStreamPlayer3D.GlobalTransform = tr;
@@ -46,5 +46,6 @@ public class BreakableGlass : CSGBox {
         mesh.CastShadow = ShadowCastingSetting.Off;
 
         mesh.RotateObjectLocal(Vector3.Forward, rnd.RandfRange(0f, Mathf.Pi * 2f));
+        #pragma warning restore
     }
 }
