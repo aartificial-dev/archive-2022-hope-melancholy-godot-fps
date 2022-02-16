@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "5YXZMkAtxgVPaZXHX3H95Cfc5nO2b4HAb2gxYvyw8EONlU0+xLLIDjVv4n4rfZX3Adh5+pzqS5DsYyr48ChfPA==",
+  "dgSpecHash": "33vfJAj2a9mHK7nqk/VecYZHIDgHFwmZ3YGDI1aCA/9d3scF/SQEfrCo3plheVKUP7r24p5gCnvI0IfLJObuXw==",
   "success": true,
-  "projectFilePath": "E:\\git\\hope_melancholy\\h.o.p.e. melancholy.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "/home/al1-ce/git/hope_melancholy/h.o.p.e. melancholy.csproj",
+  "expectedPackageFiles": [
+    "/home/al1-ce/.nuget/packages/microsoft.netframework.referenceassemblies/1.0.2/microsoft.netframework.referenceassemblies.1.0.2.nupkg.sha512",
+    "/home/al1-ce/.nuget/packages/microsoft.netframework.referenceassemblies.net472/1.0.2/microsoft.netframework.referenceassemblies.net472.1.0.2.nupkg.sha512"
+  ],
   "logs": []
 }

@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "E:\\git\\hope_melancholy\\h.o.p.e. melancholy.csproj": {}
+    "/home/al1-ce/git/hope_melancholy/h.o.p.e. melancholy.csproj": {}
   },
   "projects": {
-    "E:\\git\\hope_melancholy\\h.o.p.e. melancholy.csproj": {
+    "/home/al1-ce/git/hope_melancholy/h.o.p.e. melancholy.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\git\\hope_melancholy\\h.o.p.e. melancholy.csproj",
+        "projectUniqueName": "/home/al1-ce/git/hope_melancholy/h.o.p.e. melancholy.csproj",
         "projectName": "h.o.p.e. melancholy",
-        "projectPath": "E:\\git\\hope_melancholy\\h.o.p.e. melancholy.csproj",
-        "packagesPath": "C:\\Users\\alice\\.nuget\\packages\\",
-        "outputPath": "E:\\git\\hope_melancholy\\.mono\\temp\\obj\\",
+        "projectPath": "/home/al1-ce/git/hope_melancholy/h.o.p.e. melancholy.csproj",
+        "packagesPath": "/home/al1-ce/.nuget/packages/",
+        "outputPath": "/home/al1-ce/git/hope_melancholy/.mono/temp/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\alice\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/home/al1-ce/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net472"
@@ -37,7 +37,15 @@
       "frameworks": {
         "net472": {
           "targetAlias": "net472",
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
+          "dependencies": {
+            "Microsoft.NETFramework.ReferenceAssemblies": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.2, )",
+              "autoReferenced": true
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/al1-ce/.dotnet/sdk/6.0.102/RuntimeIdentifierGraph.json"
         }
       }
     }
