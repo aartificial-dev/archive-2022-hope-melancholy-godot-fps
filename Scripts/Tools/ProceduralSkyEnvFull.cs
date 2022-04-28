@@ -78,7 +78,7 @@ public class ProceduralSkyEnvFull : WorldEnvironment {
         
         float lightEnergy = 1f - Mathf.Abs(map - 0.5f) / 0.5f;
         lightEnergy = Mathf.Clamp((lightEnergy - 0.5f) * 2f, 0f, 1f);
-        GD.Print(lightEnergy);
+        // GD.Print(lightEnergy);
         light.LightEnergy = lightEnergy;
 
         float maxSunSize = 0.05f;

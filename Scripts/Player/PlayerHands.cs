@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class OldPlayerHands : Spatial { 
+public class PlayerHands : Spatial { 
 
     private AnimationPlayer animationPlayer;
     private Timer timer;
@@ -91,7 +91,7 @@ public class OldPlayerHands : Spatial {
         if (Input.IsActionJustPressed("key_attack") && animationPlayer.CurrentAnimation == "pipe_hold-loop") {
             animationPlayer.Play("pipe_attack");
             GetNode<AudioStreamPlayer3D>("AudioPipeAttack").Play();
-            timer.Start(0.2f);
+            timer.Start(0.12f);
         }
     }
 

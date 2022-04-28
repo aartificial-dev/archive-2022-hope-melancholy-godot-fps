@@ -14,6 +14,10 @@ public static class Helper {
         startingWidth = OS.WindowSize.x;
     }
 
+    public static Vector2 GetWindowSize() {
+        return new Vector2(OS.WindowSize.x, OS.WindowSize.y);
+    }
+
     public static Node GetLevel() {
         return GetNodeFromGroup<Node>("Level");
     }  

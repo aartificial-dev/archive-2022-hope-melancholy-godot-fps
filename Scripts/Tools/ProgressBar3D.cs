@@ -50,7 +50,7 @@ public class ProgressBar3D : Spatial {
     public override void _Ready() {
         if (editorOnly && !Engine.EditorHint) {
             this.Visible = false;
-            this.GetParent().RemoveChild(this);
+            this.GetParent().CallDeferred("remove_child", this);
             this.QueueFree();
             return;
         }

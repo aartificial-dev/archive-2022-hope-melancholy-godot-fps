@@ -2,139 +2,253 @@ using Godot;
 using System;
 
 public class Player : KinematicBody { 
-    [Export]
-    private NodePath modelHolderPath = new NodePath("ModelHolder");
-    [Export]
-    private NodePath cameraHolderPath = new NodePath("CameraHolder");
-    [Export]
-    private NodePath headHolderPath = new NodePath("ModelHolder/HeadHolder");
-    [Export]
-    private NodePath rayCastPath = new NodePath("ModelHolder/RayCast");
-    [Export]
-    private readonly float gravity = 9.8f;
-    [Export]
-    private readonly float maxSpeed = 3f;
 
-    private Spatial modelHolder;
-    private PlayerCamera cameraHolder;
-    private RayCast rayCast;
+    private const float MAX_SLOPE_ANGLE = 0.785398f;
+    private const float CAMERA_Y_STANDING = 1.7f;
+    private const float CAMERA_Y_CROUCHING = 1.033f;
 
-    private Spatial headHolder;
-	private readonly Vector3 headAngleMax = new Vector3(30f, 25f, 45f);
-	private readonly Vector3 headAngleMin = new Vector3(-30f, -25f, -45f);
-	private readonly Vector3 headAngleDef = new Vector3(15f, 0, 0); // Nod (look +down -up), Tilt (tilt +right -left), Shake (look -left +right)
-	private Vector3 headAngleCur = Vector3.Zero;
+    private PlayerCamera camera;
+    private PlayerStats playerStats = new PlayerStats();
+    
+    private float gravity = 9.8f;
+    private Vector3 velocity = Vector3.Zero;
+    private Vector3 velocityMax = new Vector3(3f, 60f, 3.5f);
+    private float velocityFalloff = 10f;
+    private float velocityLerp = 6f;
+    private float rotationY = 0f;
+    private float jumpForce = 4f;
 
-	private float camRecoverTime = 1f;
+    private bool isClimbing = false;
+
+    private float headBobTimer = 0f;
+
+    private Vector3 prevPos;
+
+    private RayCast floorRayCast;
+    private RayCast ceilingRayCast;
+
+    private CollisionShape collisionStanding;
+    private CollisionShape collisionCrouching;
+
+    private AudioPlayerRandom3D audioFootStep;
+    private AudioStreamPlayer3D audioJump;
+    private AudioStreamPlayer3D audioFall;
+
+    private Timer timerFootStep;
+
+    private AnimationPlayer cameraAnimator;
+
+    private Area ladderArea;
 
     public override void _Ready() {
-        modelHolder = GetNode<Spatial>(modelHolderPath);
-        cameraHolder = GetNode<PlayerCamera>(cameraHolderPath);
-        rayCast = GetNode<RayCast>(rayCastPath);
+        camera = GetNode<PlayerCamera>("PlayerCamera");
+        floorRayCast = GetNode<RayCast>("FloorRayCast");
+        ceilingRayCast = GetNode<RayCast>("CeilingRayCast");
+
+        ladderArea = GetNode<Area>("LadderArea");
+
+        collisionStanding = GetNode<CollisionShape>("CollisionStanding");
+        collisionCrouching = GetNode<CollisionShape>("CollisionCrouching");
+
+        audioFootStep = GetNode<AudioPlayerRandom3D>("Audio/AudioFootStep");
+        audioJump = GetNode<AudioStreamPlayer3D>("Audio/AudioJump");
+        audioFall = GetNode<AudioStreamPlayer3D>("Audio/AudioFall");
+        
+        timerFootStep = GetNode<Timer>("Audio/TimerFootStep");
+        timerFootStep.Connect("timeout", this, nameof(PlayFootStepSound));
+
+        cameraAnimator = GetNode<AnimationPlayer>("PlayerCamera/CameraAnimator");
+
+        prevPos = this.Translation;
     }
 
-	public override void _Process(float delta) {
-        if (rayCast.GetCollider() is InteractiveBase) {
-            InteractiveBase interactive = (InteractiveBase) rayCast.GetCollider();
+	public override void _PhysicsProcess(float delta) {
+        Vector3 moveVec = Vector3.Zero;
+        if (this.IsOnFloor()) {
+            rotationY = camera.Rotation.y + this.Rotation.y;
+        }
 
-            if (Input.IsActionJustPressed("key_use")) {
-                interactive.Use();
+        bool isJumping = false;
+        bool isSprinting = false;
+        bool isCrouching = false;
+
+        if (Input.IsActionPressed("key_forward")) moveVec.z -= 1f;
+        if (Input.IsActionPressed("key_backward")) moveVec.z += 1f;
+        if (Input.IsActionPressed("key_left")) moveVec.x -= 1f;
+        if (Input.IsActionPressed("key_right")) moveVec.x += 1f;
+        if (Input.IsActionJustPressed("key_jump")) isJumping = true;
+        if (Input.IsActionPressed("key_sprint")) isSprinting = true;
+        if (Input.IsActionPressed("key_crouch")) isCrouching = true;
+
+        if (!floorRayCast.IsColliding()) isCrouching = false;
+        isCrouching = ceilingRayCast.IsColliding() ? true : isCrouching;
+        if (isCrouching) isSprinting = false;
+        if (isCrouching) isJumping = false;
+
+        float crouchSpeed = 3.5f;
+        if (isCrouching) {
+            collisionStanding.Disabled = true;
+            collisionCrouching.Disabled = false;
+            camera.Translation = camera.Translation.LinearInterpolate(new Vector3(0f, CAMERA_Y_CROUCHING, 0f), delta * crouchSpeed);
+        } else {
+            collisionStanding.Disabled = false;
+            collisionCrouching.Disabled = true;
+            camera.Translation = camera.Translation.LinearInterpolate(new Vector3(0f, CAMERA_Y_STANDING, 0f), delta * crouchSpeed);
+        }
+
+        if (isCrouching) {
+            camera.UpdateFOV(camera.FOV - 2f);
+        } else
+        if (isSprinting && Mathf.Abs(velocity.x) > 1f && Mathf.Abs(velocity.z) > 1f ) {
+            camera.UpdateFOV(camera.FOV + 2f);
+        } else {
+            camera.UpdateFOV(camera.FOV);
+        }
+
+        CalculateVelocity(moveVec, isSprinting, isCrouching, isJumping, delta);
+
+        if (floorRayCast.GetCollider() is MovingPlatform platform) {
+            this.Translate(-platform.Velocity);
+            camera.RotateY(platform.Torque);
+        }
+        float yVelocity = velocity.y;
+        velocity = velocity.Rotated(Vector3.Up, rotationY);
+
+        velocity = this.MoveAndSlide(velocity, Vector3.Up, true, 4, MAX_SLOPE_ANGLE, false);
+        // velocity = this.ExtendedMove(velocity, 4);
+
+        velocity = velocity.Rotated(Vector3.Up, -rotationY);
+
+        if (yVelocity < -9f && velocity.y > -2f) {
+            audioFall.Play();
+            cameraAnimator.Play("fall");
+        }
+
+        if (moveVec != Vector3.Zero && Mathf.Abs(velocity.y) < 1f) {
+            // 6 is max velocity magnitude (sprinting forward)
+            float bobStrength = 0.004f;
+            float bobSpeedModifier = (velocity.Length() / 5.5f) * 6f;
+            headBobTimer += delta * bobSpeedModifier;
+            headBobTimer = Mathf.Wrap(headBobTimer, 0f, Mathf.Tau);
+            Vector3 rot = camera.Rotation;
+            rot.z = Mathf.Sin(headBobTimer) * bobStrength;
+            camera.Rotation = rot;
+            ProcessStepSound(isSprinting, isCrouching);
+        } else {
+            headBobTimer = 0f;
+            Vector3 rot = camera.Rotation;
+            rot.z = Mathf.Lerp(rot.z, 0f, delta);
+            camera.Rotation = rot;
+            if (timerFootStep.TimeLeft != 0) {
+                timerFootStep.Stop();
             }
         }
-	}
 
-    public override void _PhysicsProcess(float delta) {
-        ProcessInput(delta);
-    }
-
-    public override void _Input(InputEvent e) {
-        if (e is InputEventMouseMotion eventMouseMotion) {
-			GetNode<Timer>("Timer").Start(camRecoverTime);
-        }
-    }
-
-    private void ProcessInput(float delta) {
-        Vector3 movement = Vector3.Zero;
-
-        if (Input.IsActionPressed("key_right")) {
-            movement.x += 1f;
-        }
-        if (Input.IsActionPressed("key_left")) {
-            movement.x -= 1f;
-        }
-        if (Input.IsActionPressed("key_forward")) {
-            movement.z -= 1f;
-        }
-        if (Input.IsActionPressed("key_backward")) {
-            movement.z += 1f;
-        }
-
-        movement = movement.Normalized();
-
-
-        Vector3 velocity = movement * maxSpeed; // do rootmotion instead
-        velocity = velocity.Rotated(Vector3.Up, cameraHolder.Rotation.y);
-
-        float desiredModelRotation = Mathf.Wrap(Mathf.Atan2(velocity.x, velocity.z) + Mathf.Pi, 0, Mathf.Tau);
-
-        if (movement != Vector3.Zero || Input.IsActionPressed("key_aim")) {
-            // Vector3 rot = modelHolder.Rotation;
-            // rot.y = Mathf.LerpAngle(rot.y, cameraHolder.Rotation.y, DeltifyValue(0.5f / camRecoverTime, delta));
-            // modelHolder.Rotation = rot;
-            Vector3 rot = modelHolder.Rotation;
-            rot.y = Mathf.LerpAngle(rot.y, cameraHolder.Rotation.y, DeltifyValue(0.5f / camRecoverTime, delta));
-            modelHolder.Rotation = rot;
-        } 
-        // else if (movement != Vector3.Zero) {
-        //     Vector3 rot = modelHolder.Rotation;
-        //     rot.y = Mathf.LerpAngle(rot.y, desiredModelRotation, DeltifyValue(0.5f / camRecoverTime, delta));
-        //     modelHolder.Rotation = rot;
+        // TODO ladder climbing
+        // if (ladderArea) {
+        //     isClimbing = true;
         // }
 
+        // Helper.GetHUDLog().UpdateOutput(GD.Str("Speed: ", Mathf.FloorToInt((this.Translation * new Vector3(1f, 0f, 1f)).DistanceTo(prevPos * new Vector3(1f, 0f, 1f)) * 10000f)));
+        prevPos = this.Translation;
+	}
 
-        if (movement != Vector3.Zero) {
-            float fovLerpSpeed = DeltifyValue(0.1f, delta);
-            if (Input.IsActionPressed("key_sprint")) {
-                velocity *= 1.5f;
-				// stateMachine.Travel("Run-loop");
-				camRecoverTime = 0.4f;
-				cameraHolder.InterpolateFOV(85f, fovLerpSpeed);
-			} else if (Input.IsActionPressed("key_crouch")) {
-                velocity /= 1.5f;
-				// stateMachine.Travel("WalkSlow-loop");
-				camRecoverTime = 2f;
-				cameraHolder.InterpolateFOV(75f, fovLerpSpeed);
-			} else {
-				// stateMachine.Travel("Walk-loop");
-				camRecoverTime = 1f;
-				cameraHolder.InterpolateFOV(80f, fovLerpSpeed);
-			}
-			if (GetNode<Timer>("Timer").TimeLeft == 0f) {
-				float normalLerpSpd = DeltifyValue(0.1f / camRecoverTime, delta);
-				cameraHolder.InterpolateX(0f, normalLerpSpd);
-			}
-		} else {
-			// stateMachine.Travel("Idle-loop");
-		}
-
-        if (!IsOnFloor()) {
-            velocity.y = -gravity;
+    private void CalculateVelocity(Vector3 moveVec, bool isSprinting, bool isCrouching, bool isJumping, float delta) {
+        moveVec = Vector3Spheritize(moveVec);
+        float sprintModifier = (moveVec.z < 0f && isSprinting && !isCrouching) ? 1.5f : 1f;
+        float backpedal = (moveVec.z > 0f) ? 0.75f : 1f;
+        float crouchModifier = isCrouching ? 0.3f : 1f;
+        if (moveVec.z != 0f) {
+            velocity.z = Mathf.Lerp(velocity.z, velocityMax.z * moveVec.z * sprintModifier * backpedal * crouchModifier, delta * velocityLerp);
+        } else {
+            velocity.z = Mathf.Lerp(velocity.z, 0, delta * velocityFalloff);
         }
-
-        this.MoveAndSlide(velocity, Vector3.Up, true, 4, 0.785f, false);
+        if (moveVec.x != 0f) {
+            velocity.x = Mathf.Lerp(velocity.x, velocityMax.x * moveVec.x * crouchModifier, delta * velocityLerp);
+        } else {
+            velocity.x = Mathf.Lerp(velocity.x, 0, delta * velocityFalloff);
+        }
+        if (!this.IsOnFloor()) {
+            velocity.y -= gravity * delta;
+            velocity.y = Mathf.Clamp(velocity.y, -velocityMax.y, velocityMax.y);
+        }
+        if (isJumping && (floorRayCast.IsColliding() || this.IsOnFloor()) && !isCrouching) {
+            velocity.y = jumpForce;
+            audioJump.Play();
+            timerFootStep.Stop();
+            cameraAnimator.Play("jump");
+        }
+    }
+    
+    private void ProcessStepSound(bool isSprinting, bool isCrouching) {
+        if (timerFootStep.TimeLeft == 0) {
+            float baseTime = 0.65f;
+            if (isCrouching) {
+                timerFootStep.Start(baseTime * 1.8f);
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[0] = 1f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[1] = 1f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[2] = 1f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[3] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[4] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[5] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[6] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[7] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[8] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[9] = 0f;
+            } else
+            if (isSprinting) {
+                timerFootStep.Start(baseTime * 0.7f);
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[0] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[1] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[2] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[3] = 1f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[4] = 1f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[5] = 1f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[6] = 1f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[7] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[8] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[9] = 0f;
+            } else {
+                timerFootStep.Start(baseTime);
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[0] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[1] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[2] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[3] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[4] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[5] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[6] = 0f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[7] = 1f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[8] = 1f;
+                Helper.GetNodeFromGroup<AdaptiveSoundtrack>("AdaptiveSoundtrack").channelInfluence[9] = 1f;
+            }
+        }
     }
 
-    public Vector3 GetModelRotation() {
-        return modelHolder.Rotation;
+    private void PlayFootStepSound() {
+        audioFootStep.PlaySound();
     }
 
-    /// <summary>
-    /// Makes value follow delta speed
-    /// </summary>
-    /// <param name="value"></param>
-    /// <param name="delta"></param>
-    /// <returns></returns>
-    private float DeltifyValue(float value, float delta) {
-        return (value / 0.1666f) * delta;
+    private Vector3 Vector3Spheritize(Vector3 vec) {
+        // For readability
+        float x = Mathf.Abs(vec.x);
+        float y = Mathf.Abs(vec.y);
+        float z = Mathf.Abs(vec.z);
+        
+        // Gives the maximum of the absolute value of the three coordinates
+        float mag = Mathf.Max(x, Mathf.Max(y,z));
+        
+        // Returns the vector with the set magnitude
+        return vec.Normalized() * mag;
+    }
+
+    private bool IsSlopeClimbable(Vector3 normal) {
+        float slopeAng = GetSlopeAngle(normal);
+        float slopeMaxAng = MAX_SLOPE_ANGLE + 0.1f;// max slope ang + threshold
+
+        return (slopeAng > 0f && slopeAng < slopeMaxAng);
+    }
+
+    private float GetSlopeAngle(Vector3 normal) {
+        return Mathf.Acos(normal.Dot(Vector3.Up));
     }
 }

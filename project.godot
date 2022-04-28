@@ -80,7 +80,7 @@ window/stretch/aspect="expand"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/CustomResourceRegister/plugin.cfg", "res://addons/Todo_Manager/plugin.cfg", "res://addons/bone_editor/plugin.cfg", "res://addons/localization_editor/plugin.cfg", "res://addons/project_map/plugin.cfg", "res://addons/prototype_tools/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/Todo_Manager/plugin.cfg", "res://addons/bone_editor/plugin.cfg", "res://addons/localization_editor/plugin.cfg", "res://addons/project_map/plugin.cfg" )
 
 [importer_defaults]
 

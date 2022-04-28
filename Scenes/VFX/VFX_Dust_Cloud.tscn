@@ -1,0 +1,38 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Assets/Sprites/VFX/vfx_dust_white.png" type="Texture" id=1]
+
+[sub_resource type="ParticlesMaterial" id=6]
+lifetime_randomness = 0.18
+emission_shape = 1
+emission_sphere_radius = 1.42
+flag_rotate_y = true
+direction = Vector3( 0, 0, 0 )
+spread = 180.0
+gravity = Vector3( 0, -0.071, 0 )
+initial_velocity = 0.03
+initial_velocity_random = 0.44
+linear_accel = 0.01
+linear_accel_random = 1.0
+radial_accel = 0.02
+color = Color( 0.498039, 0.498039, 0.498039, 0.184314 )
+
+[sub_resource type="SpatialMaterial" id=7]
+flags_transparent = true
+flags_vertex_lighting = true
+vertex_color_use_as_albedo = true
+params_billboard_mode = 1
+albedo_texture = ExtResource( 1 )
+
+[sub_resource type="QuadMesh" id=8]
+material = SubResource( 7 )
+size = Vector2( 3, 3 )
+
+[node name="DustCloud" type="Particles"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.98886, 1.28915, 2.82095 )
+amount = 14
+lifetime = 8.0
+preprocess = 4.0
+visibility_aabb = AABB( -5.61759, -4, -6.14991, 11.2352, 8, 12.2998 )
+process_material = SubResource( 6 )
+draw_pass_1 = SubResource( 8 )

@@ -11,12 +11,12 @@ namespace PrototypeTools {
 
 		public override void _EnterTree() {
 			// Initialization of the plugin goes here.
-        AddCustomType("PrototypeCube", "Spatial", script, texture);
+		AddCustomType("PrototypeCube", "Spatial", script, texture);
 		}
 
 		public override void _ExitTree() {
 			// Clean-up of the plugin goes here.
-        RemoveCustomType("PrototypeCube");
+		RemoveCustomType("PrototypeCube");
 		}
 	}
 }

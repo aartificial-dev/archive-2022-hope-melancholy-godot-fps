@@ -59,18 +59,17 @@ public class LaserTripwire : IAlarmSetter {
     private void UpdateGeometry() {
         geometry.Clear();
         rayCast.ForceRaycastUpdate();
-        Vector3 offset = new Vector3(0f, 0f, -10f);
+        float offset = -10f;
         if (rayCast.IsColliding()) {
             Vector3 collisionPoint = rayCast.GetCollisionPoint();
             prevCollision = collisionPoint;
-            offset = this.GlobalTransform.origin - collisionPoint;
-            offset = offset.Rotated(Vector3.Up, this.Rotation.y);
+            offset = -this.GlobalTransform.origin.DistanceTo(collisionPoint);
         }
 
         geometry.Begin(Mesh.PrimitiveType.Lines);
 
         geometry.AddVertex(new Vector3(0f, 0f, 0f));
-        geometry.AddVertex(offset);
+        geometry.AddVertex(new Vector3(0f, 0f, offset));
 
         geometry.End();
     }

@@ -2,183 +2,131 @@ using Godot;
 using System;
 
 public class PlayerCamera : Spatial { 
-    [Export]
-    private Vector2 mouseSensetivity = new Vector2(0.25f, 0.25f);
-    [Export]
-    private bool invertMouseX = false;
-    [Export]
-    private bool invertMouseY = false;
-    [Export]
-    private readonly Vector2 maxTilt = new Vector2(-45f, 45f);
 
-    private Camera camera;
+    [Export(PropertyHint.Range, "0,1")]
+    private float sensitivity = 0.0025f;
+    [Export]
+    private float fov = 85;
+
+    public float FOV { get => fov; }
+
+    private float fovWanted;
+
+    public bool mouseXInversed = false;
+    public bool mouseYInversed = false;
+
+    private Camera weaponCamera;
+    private Spatial handsHolder;
     private Player player;
+    private Camera camera;
 
-    private Area collisionArea; // camera collider to detect player
+    private Vector3 handsRest = new Vector3(0f, 0f, 0f);
+    private Vector3 handsOffset = new Vector3(40f, 5f, 0f);
 
-    private Vector3 defaultCameraPos = new Vector3(0.7f, 0f, 2f);
-    private Vector3 desiredCameraPos = Vector3.Zero;
+    private RayCast interactRay;
+    private InteractiveBase interactive = null;
 
-    private readonly Vector3 tiltLookUp = new Vector3(0.7f, 0.25f, 2f);
-    private readonly Vector3 tiltLookForward = new Vector3(0.7f, 0f, 2f);
-    private readonly Vector3 tiltLookDown = new Vector3(0.7f, 0.25f, 1.5f);
-
-    private Vector3 desiredRotation = Vector3.Zero;
-
-    private Vector2 mousePos = Vector2.Zero;
-
-    private bool isShoulderSwitched = false;
-
-    private readonly float shoulderDefPos = 0.7f;
-    private float shoulderPos = 0.7f;
+    private InteractHighlight hudInteract;
 
     public override void _Ready() {
-        desiredCameraPos = defaultCameraPos;
+        Input.SetMouseMode(Input.MouseMode.Captured);
+
+        weaponCamera = GetNode<Camera>("../WeaponViewport/Viewport/WeaponCamera");
         camera = GetNode<Camera>("Camera");
+
+        handsHolder = GetNode<Spatial>("Camera/HandsHolder");
+
         player = GetParent<Player>();
 
-        collisionArea = GetNode<Area>("Camera/Area");
-        collisionArea.Connect("body_entered", this, nameof(BodyEntered));
-        collisionArea.Connect("body_exited", this, nameof(BodyExited));
+        interactRay = GetNode<RayCast>("InteractiveRayCast");
 
-        Input.SetMouseMode(Input.MouseMode.Captured);
+        hudInteract = GetNode<InteractHighlight>("../UI/InteractHighlight");
+
+        fovWanted = fov;
     }
 
-    public override void _Process(float delta) {
-        ProcessMouse(delta);
+	public override void _Process(float delta) {
+        weaponCamera.GlobalTransform = this.GlobalTransform;
 
-        if (isShoulderSwitched) {
-            // change camera pos
-            // cast ray to camera pos * 2
+        handsHolder.RotationDegrees = handsHolder.RotationDegrees.LinearInterpolate(handsRest, delta * 5f);
+        handsHolder.Rotation = new Vector3(handsHolder.Rotation.x, handsHolder.Rotation.y, -this.Rotation.z * 3f);
+
+        if (interactRay.IsColliding() && Input.IsActionJustPressed("key_use")) {
+            if (interactRay.GetCollider() is InteractiveBase interactive) {
+                interactive.Use();
+            }
+        }
+        if (interactRay.IsColliding()) {
+            if (interactRay.GetCollider() is InteractiveBase interactive) {
+                if (this.interactive != interactive) {
+                    this.interactive = interactive;
+                    // Helper.GetHUDLog().Push( interactive.GetObjectName() ); 
+                }
+                Vector2 pos = camera.UnprojectPosition(this.interactive.GlobalTransform.origin);
+                Vector2 size = CalculateInteractiveObjectSize(interactive.GetPoints(), this.interactive.GlobalTransform.origin, pos, interactive.Rotation);
+                hudInteract.ShowTooltip(interactive.GetObjectName(), pos, size);
+            } else {
+                interactive = null;
+                hudInteract.Visible = false;
+            }
         } else {
-
+            interactive = null;
+            hudInteract.Visible = false;
         }
 
-        float tilt = Mathf.Rad2Deg(this.Rotation.x);
-        float mAng = 25f;
-        float amount = (Mathf.Abs(tilt) - mAng) / (45 - mAng);
+        camera.Fov = Mathf.Lerp(camera.Fov, fovWanted, delta * 1.5f);
+	}
 
-        if (tilt < -mAng) {
-            defaultCameraPos = tiltLookForward.LinearInterpolate(tiltLookDown, amount);
-        } else if (tilt > mAng) {
-            defaultCameraPos = tiltLookForward.LinearInterpolate(tiltLookUp, amount);
-        } else {
-            defaultCameraPos = tiltLookForward;
-        }
-
-        float zoomLerpSpd = DeltifyValue(0.8f, delta); // 0.25
-        if (Input.IsActionPressed("key_aim")) {
-            // new Vector3(1.5f, 0f, 1.5f)
-            desiredCameraPos.x = Mathf.Lerp(desiredCameraPos.x, 1f, zoomLerpSpd);
-            desiredCameraPos.z = Mathf.Lerp(desiredCameraPos.z, 1.35f, zoomLerpSpd);
-            desiredCameraPos.y = Mathf.Lerp(desiredCameraPos.y, defaultCameraPos.y, zoomLerpSpd);
-        } else {
-            desiredCameraPos = desiredCameraPos.LinearInterpolate(defaultCameraPos, zoomLerpSpd);
-        }        
-
-        Vector3 defCamPos = desiredCameraPos;
-        Vector3 camPos = defCamPos;
-        if (GetNode<RayCast>("RayCast").IsColliding()) {
-
-            Vector3 pos = GetNode<RayCast>("RayCast").GetCollisionPoint();
-            Vector3 ori = this.GlobalTransform.origin;
-            Vector3 desired = defCamPos;
-            float len = ori.DistanceTo(pos);
-            float maxlen = Vector3.Zero.DistanceTo(desired);
-            len = Mathf.Min(len - 1f, maxlen);
-            camPos = desired * (len / maxlen);
-        }
-        float camLerpSpd = DeltifyValue(0.8f, delta); // 0.5f
-        camera.Translation = camera.Translation.LinearInterpolate(camPos, camLerpSpd);
-
+    public void UpdateFOV(float newFov) {
+        fovWanted = newFov;
     }
-    
+
     public override void _Input(InputEvent @event) {
-        if (@event is InputEventMouseMotion eventMouseMotion) {
-            //mousePos = eventMouseMotion.Position / viewScale;
-            mousePos = eventMouseMotion.Relative;
+        if (Input.GetMouseMode() != Input.MouseMode.Captured) return;
+        if (@event is InputEventMouseMotion mouseMotion) {
+            Vector2 mouseOffset = mouseMotion.Relative;
+
+            Vector3 rot = this.Rotation;
+
+            float xRotation = mouseOffset.y * sensitivity * (mouseYInversed ? -1 : 1);
+            float yRotation = mouseOffset.x * sensitivity * (mouseXInversed ? -1 : 1);
+
+            rot.x -= xRotation;
+            rot.y -= yRotation;
+
+            rot.x = Mathf.Clamp(rot.x, -Mathf.Pi / 2f, Mathf.Pi / 2f);
+            rot.y = Mathf.Wrap(rot.y, 0, Mathf.Tau);
+
+            this.Rotation = rot;
+
+            // TODO better weapon sway
+            // FIXME clamp hand movement (try to move mouse down when looking down)
+            Vector3 rotation = handsHolder.RotationDegrees;
+            rotation.x += xRotation * 3f;
+            rotation.y += yRotation * 1.5f;
+            rotation.x = Mathf.Clamp(rotation.x, handsRest.x - handsOffset.x, handsRest.x + handsOffset.x);
+            rotation.y = Mathf.Clamp(rotation.y, handsRest.y - handsOffset.y, handsRest.y + handsOffset.y);
+            handsHolder.RotationDegrees = rotation;
         }
     }
 
-    public void InterpolateY(float y, float amount) {
-        desiredRotation.y = Mathf.LerpAngle(desiredRotation.y, y, amount);
+    private Vector2 CalculateInteractiveObjectSize(Position3D[] points, Vector3 pos3d, Vector2 pos, Vector3 rot) {
+        Vector2 minPos = new Vector2(100000, 100000);
+        Vector2 maxPos = new Vector2(-100000, -100000);
+
+        foreach (Position3D point in points) {
+            Vector2 unproj = camera.UnprojectPosition(point.GlobalTransform.origin);
+            if (unproj.x > maxPos.x) maxPos.x = unproj.x;
+            if (unproj.y > maxPos.y) maxPos.y = unproj.y;
+            if (unproj.x < minPos.x) minPos.x = unproj.x;
+            if (unproj.y < minPos.y) minPos.y = unproj.y;
+        }
+
+        return new Vector2(maxPos.x - minPos.x, maxPos.y - minPos.y);
     }
 
-    public void InterpolateX(float x, float amount) {
-        desiredRotation.x = Mathf.LerpAngle(desiredRotation.x, x, amount);
-    }
-
-    public void InterpolateFOV(float fov, float amount) {
-        camera.Fov = Mathf.Lerp(camera.Fov, fov, amount);
-    }
-    
     public Camera GetCamera() {
         return camera;
     }
 
-    private void ProcessMouse(float delta) {
-        float cameraPan = mousePos.x;
-        float cameraTilt = mousePos.y;
-
-        if (Input.IsActionJustPressed("key_switch_shoulder")) {
-            // float normalLerpSpd = DeltifyValue(0.05f / camRecoverTime, delta);
-            // cameraHolder.InterpolateY(desiredModelRotation, normalLerpSpd);
-            // cameraHolder.InterpolateX(Mathf.Deg2Rad(-10f), normalLerpSpd);
-            // desiredRotation.x = Mathf.Deg2Rad(-15f);
-            // desiredRotation.y = player.GetModelRotation().y;
-            isShoulderSwitched = !isShoulderSwitched;
-        }
-
-        Vector3 wantedRotation = desiredRotation;
-
-        wantedRotation.x += cameraTilt * delta * mouseSensetivity.y * (invertMouseY ? 1f : -1f);
-        wantedRotation.y += cameraPan * delta * mouseSensetivity.x * (invertMouseX ? 1f : -1f);
-
-        wantedRotation.x = Mathf.Clamp(wantedRotation.x, Mathf.Deg2Rad(maxTilt.x), Mathf.Deg2Rad(maxTilt.y));
-
-        wantedRotation.y = Mathf.Wrap(wantedRotation.y, 0, Mathf.Tau);
-
-        if (Mathf.Abs(Mathf.Rad2Deg(AngleDiff(this.Rotation.y, wantedRotation.y))) <= 90f) {
-            desiredRotation.y = wantedRotation.y;
-        }
-        desiredRotation.x = wantedRotation.x;
-        
-        Vector3 rot = this.Rotation;
-        float turnLerpSpd = DeltifyValue(0.8f, delta); // 0.1f // 0.05f
-        rot.x = Mathf.LerpAngle(rot.x, desiredRotation.x, turnLerpSpd);
-        rot.y = Mathf.LerpAngle(rot.y, desiredRotation.y, turnLerpSpd);
-
-        rot.y = Mathf.Wrap(rot.y, 0, Mathf.Tau);
-        this.Rotation = rot;
-
-        mousePos = Vector2.Zero;
-    }
-
-    private float AngleDiff(float from, float to) {
-        float ans = Mathf.PosMod(to - from, Mathf.Tau);
-        if (ans > Mathf.Pi) ans -= Mathf.Tau;
-        return ans;
-    }
-
-    private void BodyEntered(Node body) {
-        if (body is Player pl) {
-            pl.Visible = false;
-        }
-    }
-
-    private void BodyExited(Node body) {
-        if (body is Player pl) {
-            pl.Visible = true;
-        }
-    }
-
-    /// <summary>
-    /// Makes value follow delta speed
-    /// </summary>
-    /// <param name="value"></param>
-    /// <param name="delta"></param>
-    /// <returns></returns>
-    private float DeltifyValue(float value, float delta) {
-        return (value / 0.1666f) * delta;
-    }
 }

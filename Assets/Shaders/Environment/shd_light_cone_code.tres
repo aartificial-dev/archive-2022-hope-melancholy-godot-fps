@@ -2,7 +2,7 @@
 
 [resource]
 code = "shader_type spatial;
-render_mode blend_add, specular_schlick_ggx, unshaded, shadows_disabled;
+render_mode blend_add, specular_schlick_ggx, unshaded, shadows_disabled, world_vertex_coords;
 
 uniform vec4 col : hint_color = vec4(0.9, 0.75, 0.45, 0.02);
 uniform float influence : hint_range(-2.0, 2.0) = 1.0;
@@ -14,7 +14,7 @@ void fragment() {
 
 	float alpha = max(col.a * ((coord.y / falloff) + influence), 0.0);
 
-	ALBEDO = col.rgb * texture(light_tex, UV).rgb;
+	ALBEDO = col.rgb * texture(light_tex, vec2(UV.x, coord.y)).rgb;
 	ALPHA = alpha * texture(light_tex, UV).a;
 
 }
