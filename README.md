@@ -16,7 +16,7 @@ ________________
 ________________
 
 ## Description
-FPS version of https://github.com/artificial-studio/hope-melancholy-gms2
+FPS version of https://github.com/artificial-studio/archive-2020-hope-melancholy-gms2
 
 Attempt at new "perspective" on project
 
